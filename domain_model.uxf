@@ -1,0 +1,73 @@
+<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><element><id>UMLClass</id><coordinates><x>288</x><y>27</y><w>108</w><h>126</h></coordinates><panel_attributes>User
+--
+userId: int
+username: String
+password: String
+firstName: String
+lastName: String
+email: String
+userType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>198</x><y>225</y><w>90</w><h>27</h></coordinates><panel_attributes>Admin</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>306</x><y>225</y><w>90</w><h>27</h></coordinates><panel_attributes>Employee</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>414</x><y>225</y><w>90</w><h>27</h></coordinates><panel_attributes>Visitor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>369</x><y>144</y><w>108</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;90</additional_attributes></element><element><id>Relation</id><coordinates><x>225</x><y>144</y><w>99</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>90;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>333</x><y>144</y><w>27</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>189</x><y>324</y><w>99</w><h>81</h></coordinates><panel_attributes>Building
+--
+buildingId: int
+address: Address
+name: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>324</y><w>90</w><h>90</h></coordinates><panel_attributes>Address
+--
+street: String
+number: String
+city: String
+zipCode: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>189</x><y>495</y><w>90</w><h>63</h></coordinates><panel_attributes>Area
+--
+areaId: int
+name: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>585</x><y>72</y><w>117</w><h>72</h></coordinates><panel_attributes>AccessCard
+--
+cardId: int
+expirationDate: Date
+status: ActivityStatus
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>855</x><y>0</y><w>90</w><h>72</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+ActivityStatus
+--
+Active
+Inactive</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>567</x><y>225</y><w>99</w><h>27</h></coordinates><panel_attributes>Permission</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>405</x><y>513</y><w>99</w><h>45</h></coordinates><panel_attributes>Checkpoint
+--
+checkpointId: int</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>225</x><y>243</y><w>90</w><h>99</h></coordinates><panel_attributes>lt=-
+m1=
+m2=
+katagrafei &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>225</x><y>396</y><w>81</w><h>117</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+contains &gt;</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>81</x><y>360</y><w>126</w><h>27</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>120;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>513</y><w>153</w><h>45</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+isProtectedBy &gt;</panel_attributes><additional_attributes>10;20;150;20</additional_attributes></element><element><id>Relation</id><coordinates><x>387</x><y>72</y><w>216</w><h>45</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1
+has &gt;</panel_attributes><additional_attributes>10;20;220;20</additional_attributes></element><element><id>Relation</id><coordinates><x>603</x><y>135</y><w>54</w><h>108</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+has &gt;</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>243</y><w>387</w><h>288</h></coordinates><panel_attributes>lt=-
+m1=1..*
+m2=1
+requires &gt;</panel_attributes><additional_attributes>390;10;390;290;10;290</additional_attributes></element><element><id>UMLClass</id><coordinates><x>756</x><y>225</y><w>135</w><h>81</h></coordinates><panel_attributes>AccessLog
+--
+timestamp: Date
+accessGranted: boolean
+accessType: AccessType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>972</x><y>0</y><w>90</w><h>72</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+AccessType
+--
+In
+Out</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>90</x><y>459</y><w>153</w><h>90</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+&lt; hasNeighbor</panel_attributes><additional_attributes>140;40;140;20;50;20;50;70;110;70</additional_attributes></element><element><id>Relation</id><coordinates><x>666</x><y>135</y><w>189</w><h>108</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+generates &gt;</panel_attributes><additional_attributes>10;10;10;70;170;70;170;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>702</x><y>612</y><w>189</w><h>54</h></coordinates><panel_attributes>Alert
+--
+timestamp: Date
+message: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>495</x><y>297</y><w>369</w><h>261</h></coordinates><panel_attributes>lt=-
+m1=0..*
+m2=1
+checks &gt;</panel_attributes><additional_attributes>370;10;370;260;10;260</additional_attributes></element><element><id>Relation</id><coordinates><x>459</x><y>549</y><w>261</w><h>117</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=0..*
+triggers &gt;</panel_attributes><additional_attributes>10;10;10;100;270;100</additional_attributes></element></diagram>
