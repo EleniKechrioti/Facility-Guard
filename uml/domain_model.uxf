@@ -1,0 +1,80 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><element><id>UMLClass</id><coordinates><x>168</x><y>148</y><w>96</w><h>112</h></coordinates><panel_attributes>User
+--
+userId: int
+username: String
+password: String
+firstName: String
+lastName: String
+email: String
+userType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>168</x><y>372</y><w>88</w><h>72</h></coordinates><panel_attributes>Building
+--
+buildingId: int
+address: Address
+name: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>372</y><w>80</w><h>80</h></coordinates><panel_attributes>Address
+--
+street: String
+number: String
+city: String
+zipCode: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>168</x><y>524</y><w>80</w><h>56</h></coordinates><panel_attributes>Area
+--
+areaId: int
+name: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>608</x><y>148</y><w>104</w><h>64</h></coordinates><panel_attributes>AccessCard
+--
+cardId: int
+expirationDate: Date
+status: ActivityStatus
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>84</y><w>80</w><h>64</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+ActivityStatus
+--
+Active
+Inactive</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>448</x><y>284</y><w>152</w><h>56</h></coordinates><panel_attributes>Permission
+--
+permissionId: int
+accessGranted: PermissionType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>360</x><y>540</y><w>88</w><h>40</h></coordinates><panel_attributes>Checkpoint
+--
+checkpointId: int</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>252</y><w>80</w><h>136</h></coordinates><panel_attributes>lt=-
+m1=1..*
+m2=0..*
+registrates &gt;</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>436</y><w>72</w><h>104</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+contains &gt;</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>72</x><y>404</y><w>112</w><h>24</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>120;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>540</y><w>136</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+isProtectedBy &gt;</panel_attributes><additional_attributes>10;20;150;20</additional_attributes></element><element><id>Relation</id><coordinates><x>256</x><y>148</y><w>368</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1
+obtains &gt;</panel_attributes><additional_attributes>10;20;440;20</additional_attributes></element><element><id>Relation</id><coordinates><x>536</x><y>204</y><w>120</w><h>96</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+&lt; has</panel_attributes><additional_attributes>120;10;120;70;10;70;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>332</y><w>344</w><h>224</h></coordinates><panel_attributes>lt=-
+m1=1..*
+m2=1
+requires &gt;</panel_attributes><additional_attributes>390;10;390;250;10;250</additional_attributes></element><element><id>UMLClass</id><coordinates><x>672</x><y>284</y><w>160</w><h>72</h></coordinates><panel_attributes>AccessLog
+--
+timestamp: Date
+accessGranted: PermissionType
+accessType: AccessType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>864</x><y>84</y><w>80</w><h>64</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+AccessType
+--
+In
+Out</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>492</y><w>136</w><h>80</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=*
+&lt; hasNeighbor</panel_attributes><additional_attributes>140;40;140;20;50;20;50;70;110;70</additional_attributes></element><element><id>Relation</id><coordinates><x>664</x><y>204</y><w>96</w><h>96</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+generates &gt;</panel_attributes><additional_attributes>30;10;30;70;80;70;80;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>624</x><y>628</y><w>168</w><h>48</h></coordinates><panel_attributes>Alert
+--
+timestamp: Date
+message: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>440</x><y>348</y><w>328</w><h>232</h></coordinates><panel_attributes>lt=-
+m1=0..*
+m2=1
+checks &gt;</panel_attributes><additional_attributes>370;10;370;260;10;260</additional_attributes></element><element><id>Relation</id><coordinates><x>408</x><y>572</y><w>232</w><h>104</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=0..*
+triggers &gt;</panel_attributes><additional_attributes>10;10;10;100;270;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>816</x><y>164</y><w>80</w><h>64</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+PermissionType
+--
+AccessGranted
+AccessDenied</panel_attributes><additional_attributes></additional_attributes></element></diagram>
