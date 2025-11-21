@@ -1,6 +1,8 @@
 package org.aueb.domain;
 
 import jakarta.persistence.*;
+import org.aueb.util.enumerations.UserType;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,7 +13,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "users")
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User {
 
     /**
@@ -52,6 +53,10 @@ public class User {
     @Column(name = "email", length = 50, nullable = false)
     private String email;
 
+    @Enumerated(EnumType.STRING) // Αποθηκεύει το όνομα του Enum (π.χ. "Administrator")
+    @Column(name = "user_type", nullable = false)
+    private UserType userType;
+
     /**
      * Default Constructor
      */
@@ -66,12 +71,13 @@ public class User {
      * @param firstName The first name of the User
      * @param lastName The last name of the User
      */
-    public User(String username, String password, String firstName, String lastName, String email){
+    public User(String username, String password, String firstName, String lastName, String email, UserType userType){
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.userType = userType;
     }
 
     /**
@@ -162,6 +168,12 @@ public class User {
         this.lastName = lastName;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;                      }
     /**
      * Equality depends on all fields of the address
      * @param o the other object

@@ -3,6 +3,7 @@ package org.aueb.persistence;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.aueb.domain.*;
+import org.aueb.util.enumerations.UserType;
 
 public class Initializer {
 
@@ -28,7 +29,7 @@ public class Initializer {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
-        User user = new User("userTest", "password", "John", "Doe", "johndoe@email.com");
+        User user = new User("userTest", "password", "John", "Doe", "johndoe@email.com", UserType.Administrator);
         em.persist(user);
 
         tx.commit();
