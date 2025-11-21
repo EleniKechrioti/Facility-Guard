@@ -1,76 +1,64 @@
 package org.aueb.domain;
 
 import jakarta.persistence.*;
+import org.aueb.util.enumerations.ActivityStatus;
 import org.aueb.util.enumerations.UserType;
 
-import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
-/**
- * Represents a system user (e.g., employee, administrator, visitor) who interacts with
- * the access control system.
- * This entity is mapped to the "USERS" table in the relational database.
- */
 @Entity
 @Table(name = "users")
 public class User {
 
-    /**
-     * The unique identifier for the user. Serves as the primary key.
-     */
+    /** Ο μοναδικός αναγνωριστικός αριθμός του χρήστη (Primary Key). */
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
 
-    /**
-     * The unique username used for system login. Must be unique and non-null.
-     */
+    /** Το μοναδικό username για login. */
     @Column(nullable = false, unique = true)
     private String username;
 
-    /**
-     * The user's password. Stored as a hash in a production environment. Non-null.
-     */
+    /** Ο κωδικός πρόσβασης. */
     @Column(nullable = false)
     private String password;
 
-    /**
-     * The user's legal first name.
-     */
+    /** Όνομα. */
     @Column(name = "first_name", length = 50, nullable = false)
     private String firstName;
 
-    /**
-     * The user's legal last name.
-     */
+    /** Επώνυμο. */
     @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
 
-    /**
-     * The user's email address
-     */
+    /** Email. */
     @Column(name = "email", length = 50, nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING) // Αποθηκεύει το όνομα του Enum (π.χ. "Administrator")
+    /** Ο ρόλος του χρήστη (ADMINISTRATOR, EMPLOYEE, VISITOR). */
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = false)
     private UserType userType;
 
-    /**
-     * Default Constructor
-     */
-    public User() {
-    }
+    // ⬇️ ΣΧΕΣΗ 1:Ν (One-to-Many) με RegistrationRequest (Non-Owning Side)
+    // Το Foreign Key (user_fk) βρίσκεται στην κλάση RegistrationRequest.
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<RegistrationRequest> registrationRequests = new HashSet<>();
 
-    /**
-     * Constructor
-     *
-     * @param username The username of the User
-     * @param password The password of the User
-     * @param firstName The first name of the User
-     * @param lastName The last name of the User
-     */
+    // ⬇️ ΣΧΕΣΗ 1:1 (One-to-One) με AccessCard (Owning Side - ΕΔΩ ΜΠΑΙΝΕΙ το FK)
+    // card_fk: το Foreign Key στον πίνακα users που δείχνει στον πίνακα access_card
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_fk", referencedColumnName = "card_id")
+    private AccessCard accessCard;
+
+    // Default Constructor
+    public User() {}
+
+    // Parameterized Constructor
     public User(String username, String password, String firstName, String lastName, String email, UserType userType){
         this.username = username;
         this.password = password;
@@ -80,105 +68,98 @@ public class User {
         this.userType = userType;
     }
 
+    // ------------------- Business Methods -------------------
+
     /**
-     * Returns the user id
-     * @return the user id
+     * Δημιουργεί και υποβάλλει ένα νέο αίτημα εγγραφής.
+     * @throws IllegalStateException εάν ο χρήστης έχει ήδη ενεργό αίτημα (status=ACTIVE).
      */
-    public int getUserId() {
-        return userId;
+    public RegistrationRequest submitRegistrationRequest() {
+        // 1. ΕΛΕΓΧΟΣ BUSINESS RULE: Βρίσκει αν υπάρχει έστω και ένα αίτημα με status=ACTIVE
+        boolean hasActiveRequest = this.registrationRequests.stream()
+                .anyMatch(r -> r.getStatus() == ActivityStatus.Active);
+
+        if (hasActiveRequest) {
+            throw new IllegalStateException("User " + this.username + " already has an active registration request. Cannot submit a new one.");
+        }
+
+        // 2. Δημιουργία νέου αιτήματος (ξεκινάει ως ACTIVE/approved=false)
+        RegistrationRequest newRequest = new RegistrationRequest();
+
+        // 3. Χρήση του helper για αμφίδρομη σύνδεση
+        addRegistrationRequest(newRequest);
+
+        return newRequest;
     }
 
     /**
-     * Returns the username
-     * @return the username
+     * Εκδίδει μία νέα AccessCard στον User, αν υπάρχει ACTIVE/APPROVED αίτημα.
+     * @param expirationDate Η ημερομηνία λήξης της κάρτας.
+     * @return Η εκδοθείσα AccessCard.
+     * @throws IllegalStateException αν δεν υπάρχουν οι προϋποθέσεις.
      */
-    public String getUsername() {
-        return username;
+    public AccessCard issueAccessCard(Date expirationDate) {
+        if (this.accessCard != null) {
+            throw new IllegalStateException("User already has an access card.");
+        }
+
+        // 1. Εύρεση του ενεργού και εγκεκριμένου αιτήματος
+        RegistrationRequest activeApprovedRequest = this.registrationRequests.stream()
+                .filter(r -> r.getStatus() == ActivityStatus.Active && r.isApproved())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Cannot issue card: No ACTIVE and APPROVED registration request found."));
+
+        // 2. Δημιουργία της κάρτας (ξεκινάει ως ACTIVE)
+        AccessCard newCard = new AccessCard(expirationDate);
+
+        // 3. Σύνδεση της κάρτας με τον User (Χρήση του Owning Side setter/helper)
+        setAccessCard(newCard);
+
+        // Το activeApprovedRequest παραμένει ACTIVE, εμποδίζοντας νέα submitRequests.
+
+        return newCard;
     }
 
-    /**
-     * Sets the username
-     * @param username the username
-     */
-    public void setUsername(String username) {
-        this.username = username;
+    // ------------------- Getters and Setters -------------------
+
+    // Getters for simple fields
+    public int getUserId() { return userId; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public UserType getUserType() { return userType; }
+    public void setUserType(UserType userType) { this.userType = userType; }
+
+    // Getters/Setters for Relationships (Helpers)
+    public Set<RegistrationRequest> getRegistrationRequests() { return registrationRequests; }
+
+    // Helper Method για αμφίδρομη συνοχή (RegistrationRequest)
+    public void addRegistrationRequest(RegistrationRequest request) {
+        this.registrationRequests.add(request);
+        if (request.getUser() != this) {
+            request.setUser(this);
+        }
     }
 
-    /**
-     * Returns the password
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
+    public AccessCard getAccessCard() { return accessCard; }
+
+    // Helper Method για αμφίδρομη συνοχή (AccessCard)
+    public void setAccessCard(AccessCard accessCard) {
+        this.accessCard = accessCard;
+        if (accessCard != null && accessCard.getUser() != this) {
+            accessCard.setUser(this);
+        }
     }
 
-    /**
-     * Sets the password
-     * @param password the password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    // ------------------- Equals and HashCode -------------------
 
-    /**
-     * Returns the email
-     * @return the email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Sets the email
-     * @param email the email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
-     * Returns the first name
-     * @return the first name
-     */
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /**
-     * Sets the first name
-     * @param firstName the first name
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * Returns the last name
-     * @return the last name
-     */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * Sets the last name
-     * @param lastName the last name
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;                      }
-    /**
-     * Equality depends on all fields of the address
-     * @param o the other object
-     * @return  {@code true} if the objects are equal
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
