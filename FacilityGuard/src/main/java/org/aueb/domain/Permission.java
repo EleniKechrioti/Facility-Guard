@@ -1,0 +1,88 @@
+package org.aueb.domain;
+
+import jakarta.persistence.*;
+import org.aueb.util.enumerations.PermissionType;
+import org.aueb.util.enumerations.UserType;
+
+import java.util.Objects;
+
+@Entity
+@Table(name = "permission")
+public class Permission {
+
+    @Id
+    @Column(name = "permission_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int permissionId;
+
+    /** Τύπος άδειας (AccessGranted/AccessDenied). */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access_granted", nullable = false)
+    private PermissionType accessGranted;
+
+    // ΣΧΕΣΗ MANY-TO-ONE με AccessCard (Owning Side)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_fk", referencedColumnName = "card_id", nullable = false)
+    private AccessCard accessCard;
+
+    // Default Constructor
+    public Permission() {}
+
+    /**
+     * Constructor για τη δημιουργία νέας άδειας.
+     */
+    public Permission(PermissionType accessGranted, AccessCard accessCard) {
+        this.accessGranted = accessGranted;
+        setAccessCard(accessCard);
+    }
+
+    // ------------------- Business Method -------------------
+
+    /**
+     * Ενημερώνει το PermissionType της άδειας, με έλεγχο ρόλου.
+     * @param newType Το νέο PermissionType.
+     * @param actingUser Ο User που επιχειρεί την αλλαγή.
+     * @throws SecurityException αν ο actingUser δεν είναι Administrator.
+     */
+    public void updatePermissionType(PermissionType newType, User actingUser) {
+        // 1. ΕΛΕΓΧΟΣ ΡΟΛΟΥ
+        if (actingUser == null || actingUser.getUserType() != UserType.Administrator) {
+            throw new SecurityException("Only users with the role 'ADMINISTRATOR' can modify the permission type.");
+        }
+
+        // 2. Εφαρμογή της αλλαγής (επιτρέπεται)
+        this.accessGranted = newType;
+    }
+
+    // ------------------- Getters και Helper Setters -------------------
+
+    public int getPermissionId() { return permissionId; }
+
+    public PermissionType getAccessGranted() { return accessGranted; }
+
+
+    public AccessCard getAccessCard() { return accessCard; }
+
+    // Helper Method για αμφίδρομη συνοχή (AccessCard - Πλευρά Many)
+    public void setAccessCard(AccessCard accessCard) {
+        this.accessCard = accessCard;
+        if (accessCard != null && !accessCard.getPermissions().contains(this)) {
+            accessCard.addPermission(this);
+        }
+    }
+
+    // ------------------- Equals and HashCode -------------------
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Permission that = (Permission) o;
+        return permissionId == that.permissionId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(permissionId);
+    }
+}
