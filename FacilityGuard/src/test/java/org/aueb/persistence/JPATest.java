@@ -1,19 +1,22 @@
 package org.aueb.persistence;
 
 import jakarta.persistence.EntityManager;
+import org.aueb.domain.Building;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 public class JPATest {
-    EntityManager em;
+    protected EntityManager em;
+    protected Building testBuilding;
 
     @BeforeEach
     public void setup() {
 
         Initializer initializer = new Initializer();
         initializer.prepareData();
+        this.testBuilding = Initializer.getPersistedBuilding();
 
-        em = JPAUtil.getCurrentEntityManager();
+        this.em = JPAUtil.getCurrentEntityManager();
 
     }
 

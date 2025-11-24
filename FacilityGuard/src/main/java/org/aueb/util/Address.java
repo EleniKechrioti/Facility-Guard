@@ -9,6 +9,7 @@ import jakarta.persistence.*;
  */
 @Embeddable
 public class Address {
+
     @Column(name="street", length=50)
     private String street;
 
@@ -41,6 +42,13 @@ public class Address {
         this.country = address.getCountry();
     }
 
+    public Address(String street, String number, String city, String zipcode, String country){
+        this.street = street;
+        this.number = number;
+        this.city = city;
+        this.zipcode = zipcode;
+        this.country = country;
+    }
     /**
      * Sets the street
      * @param street the street
