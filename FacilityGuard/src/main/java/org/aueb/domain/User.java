@@ -74,7 +74,7 @@ public class User {
     // Parameterized Constructor
     public User(String username, String password, String firstName, String lastName, String email, UserType userType){
         this.username = username;
-        this.password = password;
+        setPassword(password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -193,6 +193,31 @@ public class User {
 
 
     //---------- Getters and Setters --------------------
+
+
+    /**
+     * Returns the user id
+     * @return the user id
+     */
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     * Returns the username
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username
+     * @param username the username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     /**
      * Returns the stored password hash.

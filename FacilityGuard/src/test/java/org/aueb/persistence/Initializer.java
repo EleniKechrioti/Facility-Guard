@@ -20,7 +20,16 @@ public class Initializer {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
+        em.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
+        em.createNativeQuery("delete from checkpoints");
+        em.createNativeQuery("delete from permissions");
+        em.createNativeQuery("delete from areas");
+        em.createNativeQuery("delete from buildings");
+        em.createNativeQuery("delete from access_card");
+        em.createNativeQuery("delete from registration_request");
         em.createNativeQuery("delete from users").executeUpdate();
+
+        em.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
 
         tx.commit();
     }
