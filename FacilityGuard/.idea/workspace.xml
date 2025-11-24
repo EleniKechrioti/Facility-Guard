@@ -5,24 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="326045f2-c633-417d-a353-a9d17d062cfb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/orm.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/aueb/domain/Checkpoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/domain/AreaTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/domain/BuildingTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/AreaJPATest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/BuildingJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/domain/AccessCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/aueb/domain/AccessCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/util/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/aueb/util/Address.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/aueb/domain/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/aueb/domain/UserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/Initializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/Initializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/JPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/JPATest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OUTPUT_DIRECTORY" value="C:\Users\eleni\Desktop\msc\Advanced Software\team01-ft-2025-26\FacilityGuard\htmlReport" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="isToolWindowVisible" value="false" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
@@ -32,104 +51,115 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.FacilityGuard [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.FacilityGuard [install].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/eleni/Desktop/msc/Προηγμένες Μέθοδοι Ανάπτυξης Λογισμικού/team01-ft-2025-26/FacilityGuard/src/main/java/org/aueb/Main.java&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "JUnit.AddressTest.executor": "Run",
+    "JUnit.AreaJPATest.executor": "Run",
+    "JUnit.AreaTest.checkAreaEqualityBeforePersistence.executor": "Run",
+    "JUnit.AreaTest.executor": "Run",
+    "JUnit.BuildingJPATest.executor": "Run",
+    "JUnit.BuildingTest.executor": "Run",
+    "JUnit.JPAUtilTest.executor": "Run",
+    "JUnit.UserJPATest.executor": "Run",
+    "JUnit.UserTest.executor": "Run",
+    "JUnit.aueb in FacilityGuard.executor": "Run",
+    "JUnit.domain in FacilityGuard.executor": "Coverage",
+    "JUnit.persistence in FacilityGuard.executor": "Run",
+    "Maven.FacilityGuard [clean].executor": "Run",
+    "Maven.FacilityGuard [install].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/eleni/Desktop/msc/Advanced Software/team01-ft-2025-26/FacilityGuard",
+    "onboarding.tips.debug.path": "C:/Users/eleni/Desktop/msc/Προηγμένες Μέθοδοι Ανάπτυξης Λογισμικού/team01-ft-2025-26/FacilityGuard/src/main/java/org/aueb/Main.java",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\eleni\Desktop\msc\Προηγμένες Μέθοδοι Ανάπτυξης Λογισμικού\team01-ft-2025-26\FacilityGuard\.mvn\wrapper" />
       <recent name="C:\Users\eleni\Desktop\msc\Προηγμένες Μέθοδοι Ανάπτυξης Λογισμικού\team01-ft-2025-26\FacilityGuard" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.aueb.Main" />
+  <component name="RunManager" selected="JUnit.aueb in FacilityGuard">
+    <configuration name="AreaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.aueb.*" />
+          <option name="PATTERN" value="org.aueb.domain.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="org.aueb.domain" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.domain.AreaTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FacilityGuard [clean]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
-      <MavenSettings>
-        <option name="myGeneralSettings" />
-        <option name="myRunnerSettings" />
-        <option name="myRunnerParameters">
-          <MavenRunnerParameters>
-            <option name="cmdOptions" />
-            <option name="profiles">
-              <set />
-            </option>
-            <option name="goals">
-              <list>
-                <option value="clean" />
-              </list>
-            </option>
-            <option name="multimoduleDir" />
-            <option name="pomFileName" value="pom.xml" />
-            <option name="profilesMap">
-              <map />
-            </option>
-            <option name="projectsCmdOptionValues">
-              <list />
-            </option>
-            <option name="resolveToWorkspace" value="false" />
-            <option name="workingDirPath" value="$PROJECT_DIR$" />
-          </MavenRunnerParameters>
-        </option>
-      </MavenSettings>
-      <method v="2" />
+    <configuration name="AreaTest.checkAreaEqualityBeforePersistence" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.aueb.domain.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.aueb.domain" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.domain.AreaTest" />
+      <option name="METHOD_NAME" value="checkAreaEqualityBeforePersistence" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="FacilityGuard [install]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
-      <MavenSettings>
-        <option name="myGeneralSettings" />
-        <option name="myRunnerSettings" />
-        <option name="myRunnerParameters">
-          <MavenRunnerParameters>
-            <option name="cmdOptions" />
-            <option name="profiles">
-              <set />
-            </option>
-            <option name="goals">
-              <list>
-                <option value="install" />
-              </list>
-            </option>
-            <option name="multimoduleDir" />
-            <option name="pomFileName" value="pom.xml" />
-            <option name="profilesMap">
-              <map />
-            </option>
-            <option name="projectsCmdOptionValues">
-              <list />
-            </option>
-            <option name="resolveToWorkspace" value="false" />
-            <option name="workingDirPath" value="$PROJECT_DIR$" />
-          </MavenRunnerParameters>
-        </option>
-      </MavenSettings>
-      <method v="2" />
+    <configuration name="BuildingJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.aueb.persistence.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.aueb.persistence" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.BuildingJPATest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BuildingTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.aueb.domain.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.aueb.domain" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.domain.BuildingTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="aueb in FacilityGuard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java/org/aueb" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Maven.FacilityGuard [install]" />
-        <item itemvalue="Maven.FacilityGuard [clean]" />
+        <item itemvalue="JUnit.aueb in FacilityGuard" />
+        <item itemvalue="JUnit.BuildingTest" />
+        <item itemvalue="JUnit.AreaTest" />
+        <item itemvalue="JUnit.AreaTest.checkAreaEqualityBeforePersistence" />
+        <item itemvalue="JUnit.BuildingJPATest" />
       </list>
     </recent_temporary>
   </component>
@@ -143,5 +173,20 @@
       <updated>1763235106132</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FacilityGuard$aueb_in_FacilityGuard.ic" NAME="aueb in FacilityGuard Coverage Results" MODIFIED="1763982475499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/FacilityGuard$domain_in_FacilityGuard.ic" NAME="domain in FacilityGuard Coverage Results" MODIFIED="1763930967850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
