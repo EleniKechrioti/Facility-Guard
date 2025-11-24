@@ -29,7 +29,6 @@ public class CheckpointJPATest {
         Building building = new Building("HQ", address);
         Area area = new Area("Server Room", building);
 
-        em.persist(address);
         em.persist(building);
         em.persist(area);
 

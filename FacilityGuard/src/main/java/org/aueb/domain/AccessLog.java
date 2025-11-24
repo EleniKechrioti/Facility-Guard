@@ -44,7 +44,7 @@ public class AccessLog {
 
     /** Checkpoint στο οποίο έγινε το συμβάν. (Many-to-One, owning side) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "checkpoint_fk", referencedColumnName = "checkpoint_id", nullable = false)
+    @JoinColumn(name = "checkpoint_fk", nullable = false)
     private Checkpoint checkpoint;
 
     // ================= Constructors =================
