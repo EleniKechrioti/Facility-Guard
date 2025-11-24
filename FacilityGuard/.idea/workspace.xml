@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="326045f2-c633-417d-a353-a9d17d062cfb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/aueb/domain/Checkpoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/domain/AreaTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/domain/BuildingTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/AreaJPATest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/BuildingJPATest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/domain/AccessCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/aueb/domain/AccessCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/util/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/aueb/util/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/aueb/domain/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/aueb/domain/UserTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/Initializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/Initializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/JPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/aueb/persistence/JPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/domain/AccessLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/aueb/domain/AccessLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/aueb/domain/Checkpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/aueb/domain/Checkpoint.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +55,7 @@
     "JUnit.UserTest.executor": "Run",
     "JUnit.aueb in FacilityGuard.executor": "Run",
     "JUnit.domain in FacilityGuard.executor": "Coverage",
+    "JUnit.org.aueb in FacilityGuard.executor": "Run",
     "JUnit.persistence in FacilityGuard.executor": "Run",
     "Maven.FacilityGuard [clean].executor": "Run",
     "Maven.FacilityGuard [install].executor": "Run",
@@ -83,7 +74,7 @@
       <recent name="C:\Users\eleni\Desktop\msc\Προηγμένες Μέθοδοι Ανάπτυξης Λογισμικού\team01-ft-2025-26\FacilityGuard" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.aueb in FacilityGuard">
+  <component name="RunManager" selected="JUnit.org.aueb in FacilityGuard">
     <configuration name="AreaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -115,21 +106,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BuildingJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.persistence.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.persistence" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.BuildingJPATest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="BuildingTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -153,13 +129,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="org.aueb in FacilityGuard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.aueb.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.aueb" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.org.aueb in FacilityGuard" />
         <item itemvalue="JUnit.aueb in FacilityGuard" />
         <item itemvalue="JUnit.BuildingTest" />
         <item itemvalue="JUnit.AreaTest" />
         <item itemvalue="JUnit.AreaTest.checkAreaEqualityBeforePersistence" />
-        <item itemvalue="JUnit.BuildingJPATest" />
       </list>
     </recent_temporary>
   </component>
@@ -186,7 +176,10 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/FacilityGuard$aueb_in_FacilityGuard.ic" NAME="aueb in FacilityGuard Coverage Results" MODIFIED="1763982475499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/FacilityGuard$org_aueb_in_FacilityGuard.ic" NAME="org.aueb in FacilityGuard Coverage Results" MODIFIED="1763992285709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.aueb.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/FacilityGuard$aueb_in_FacilityGuard.ic" NAME="aueb in FacilityGuard Coverage Results" MODIFIED="1764004874300" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/FacilityGuard$domain_in_FacilityGuard.ic" NAME="domain in FacilityGuard Coverage Results" MODIFIED="1763930967850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

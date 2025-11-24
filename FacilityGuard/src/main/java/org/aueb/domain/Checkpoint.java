@@ -10,6 +10,7 @@ public class Checkpoint implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "checkpoint_id")
     private int checkpointId;
 
     @Column(nullable = false, length = 100)
