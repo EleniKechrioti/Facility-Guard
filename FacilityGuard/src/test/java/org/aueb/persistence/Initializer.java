@@ -21,8 +21,6 @@ public class Initializer {
         tx.begin();
 
         em.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
-        em.createNativeQuery("delete from alerts").executeUpdate();
-        em.createNativeQuery("delete from access_logs").executeUpdate();
         em.createNativeQuery("delete from checkpoints");
         em.createNativeQuery("delete from permissions");
         em.createNativeQuery("delete from areas");
