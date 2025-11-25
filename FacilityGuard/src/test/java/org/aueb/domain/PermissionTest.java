@@ -15,6 +15,7 @@ public class PermissionTest {
     private User employeeUser;
     private AccessCard testCard;
     private Permission permission;
+    private Area area;
 
     @BeforeEach
     void setUp() {
@@ -24,9 +25,9 @@ public class PermissionTest {
 
         // Δημιουργία κάρτας (χρησιμοποιείται μόνο για σύνδεση)
         testCard = new AccessCard(new Date(System.currentTimeMillis() + 86400000)); // Λήγει αύριο
-
+        area = new Area("Test Area", new Building("Test Building", null));
         // Δημιουργία αρχικής άδειας
-        permission = new Permission(PermissionType.AccessDenied, testCard);
+        permission = new Permission(PermissionType.AccessDenied, testCard, area);
     }
 
     @Test

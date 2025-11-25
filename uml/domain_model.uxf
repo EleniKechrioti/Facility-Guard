@@ -30,9 +30,10 @@ Active
 Inactive</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>496</x><y>360</y><w>152</w><h>56</h></coordinates><panel_attributes>Permission
 --
 permissionId: int
-accessGranted: PermissionType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>408</x><y>616</y><w>88</w><h>40</h></coordinates><panel_attributes>Checkpoint
+accessGranted: PermissionType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>408</x><y>616</y><w>88</w><h>48</h></coordinates><panel_attributes>Checkpoint
 --
-checkpointId: int</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>248</x><y>512</y><w>72</w><h>104</h></coordinates><panel_attributes>lt=-
+checkpointId: int
+name: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>248</x><y>512</y><w>72</w><h>104</h></coordinates><panel_attributes>lt=-
 m1=1
 m2=1..*
 contains &gt;</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>120</x><y>480</y><w>112</w><h>24</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>120;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>288</x><y>616</y><w>136</w><h>40</h></coordinates><panel_attributes>lt=-
