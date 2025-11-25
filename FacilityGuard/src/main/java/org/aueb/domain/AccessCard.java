@@ -71,6 +71,32 @@ public class AccessCard {
         // πρέπει να γίνει στο Service Layer.
     }
 
+    /**
+     * Checks if the card is currently active and not expired.
+     * @return true if the card is currently valid.
+     */
+    public boolean isValid() {
+        // 1. Check status
+        if (this.status != ActivityStatus.Active) {
+            return false;
+        }
+
+        // 2. Check expiration date against the current time
+        // The card is valid if the current time is BEFORE the expiration date.
+        return this.expirationDate.after(new Date());
+    }
+
+    /**
+     * Reactivates the card, setting its status to ACTIVE.
+     * @throws IllegalStateException if the card is already active.
+     */
+    public void reactivateCard() {
+        if (this.status == ActivityStatus.Active) {
+            throw new IllegalStateException("Card is already active.");
+        }
+        this.status = ActivityStatus.Active;
+    }
+
     // ------------------- Getters and Setters -------------------
 
     // Getters/Setters for simple fields
