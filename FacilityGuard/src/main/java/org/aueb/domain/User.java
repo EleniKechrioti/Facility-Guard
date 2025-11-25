@@ -73,12 +73,12 @@ public class User {
 
     // Parameterized Constructor
     public User(String username, String password, String firstName, String lastName, String email, UserType userType){
-        this.username = username;
+        setUsername(username);
         setPassword(password);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.userType = userType;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setEmail(email);
+        setUserType(userType);
     }
 
     // ------------------- Business Methods -------------------

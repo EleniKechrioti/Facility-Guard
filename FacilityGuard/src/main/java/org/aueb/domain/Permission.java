@@ -59,6 +59,19 @@ public class Permission {
         this.accessGranted = newType;
     }
 
+    /**
+     * Permanently invalidates the permission, typically when the AccessCard expires or is revoked.
+     * This should be done only by an Administrator.
+     * @param actingUser The User attempting the invalidation (must be Administrator).
+     * @throws SecurityException if the actingUser is not an Administrator.
+     */
+    public void invalidate(User actingUser) {
+        if (actingUser == null || actingUser.getUserType() != UserType.Administrator) {
+            throw new SecurityException("Only administrators can invalidate a permission.");
+        }
+        this.accessGranted = PermissionType.AccessDenied;
+    }
+
     // ------------------- Getters και Helper Setters -------------------
 
     public int getPermissionId() { return permissionId; }
@@ -68,7 +81,6 @@ public class Permission {
 
     public AccessCard getAccessCard() { return accessCard; }
 
-    // Helper Method για αμφίδρομη συνοχή (AccessCard - Πλευρά Many)
     public void setAccessCard(AccessCard accessCard) {
         this.accessCard = accessCard;
         if (accessCard != null && !accessCard.getPermissions().contains(this)) {
