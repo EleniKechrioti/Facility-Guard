@@ -25,15 +25,20 @@ public class Permission {
     @JoinColumn(name = "card_fk", referencedColumnName = "card_id", nullable = false)
     private AccessCard accessCard;
 
-    // Default Constructor
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "area_fk", nullable = false)
+    private Area area;
+
+    /** Default Constructor*/
     public Permission() {}
 
     /**
      * Constructor για τη δημιουργία νέας άδειας.
      */
-    public Permission(PermissionType accessGranted, AccessCard accessCard) {
+    public Permission(PermissionType accessGranted, AccessCard accessCard, Area area) {
         this.accessGranted = accessGranted;
         setAccessCard(accessCard);
+        setArea(area);
     }
 
     // ------------------- Business Method -------------------
@@ -68,6 +73,24 @@ public class Permission {
         this.accessCard = accessCard;
         if (accessCard != null && !accessCard.getPermissions().contains(this)) {
             accessCard.addPermission(this);
+        }
+    }
+
+    /**
+     * Returns the Area in which the permission is referenced.
+     */
+    public Area getArea() {
+        return area;
+    }
+
+    /**
+     * Sets the Area.
+     * @param area the Area.
+     */
+    public void setArea(Area area) {
+        this.area = area;
+        if (area != null && !area.getPermissions().contains(this)) {
+            area.addPermission(this);
         }
     }
 

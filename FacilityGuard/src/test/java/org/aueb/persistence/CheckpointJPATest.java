@@ -37,7 +37,7 @@ public class CheckpointJPATest {
         em.persist(card);
 
         // --- Create Permission (REQUIRES AccessCard) ---
-        Permission permission = new Permission(PermissionType.AccessGranted, card);
+        Permission permission = new Permission(PermissionType.AccessGranted, card, area);
         em.persist(permission);
 
         // --- Create Checkpoint ---
