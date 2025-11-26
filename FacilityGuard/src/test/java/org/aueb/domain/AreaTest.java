@@ -95,4 +95,46 @@ public class AreaTest {
         assertEquals(cp2.getName(), foundCp.getName(), "The retrieved Checkpoint should be correct.");
         assertNull(notFoundCp, "Should return null if the Checkpoint name does not exist.");
     }
+
+    /**
+     * Checks if removing a Checkpoint correctly clears the back-reference
+     */
+    @Test
+    void removeCheckpointAndCheckBidirectionalLink() {
+        Building building = createTransientBuilding();
+        Area area = new Area("Warehouse", building);
+        Checkpoint cp1 = new Checkpoint("Exit Scanner");
+
+        area.addCheckpoint(cp1);
+
+        assertEquals(1, area.getCheckpoints().size());
+        assertNotNull(cp1.getArea());
+
+        area.removeCheckpoint(cp1);
+
+        assertEquals(0, area.getCheckpoints().size(), "Checkpoint must be removed from the set.");
+        assertNull(cp1.getArea(), "The back-reference in Checkpoint must be set to null.");
+    }
+
+    /**
+     * Tests the addPermission method, including the bidirectional safety check
+     */
+    @Test
+    void addPermissionAndCheckSafetyLink() {
+        Building building = createTransientBuilding();
+        Area area = new Area("Security Gate", building);
+        Permission p1 = new Permission(); // Placeholder Permission
+
+        area.addPermission(p1);
+
+        assertEquals(1, area.getPermissions().size(), "Area must contain the permission.");
+
+        assertEquals(area, p1.getArea(), "Permission must reference the correct Area (back-reference).");
+
+        area.addPermission(p1);
+        assertEquals(1, area.getPermissions().size(), "Adding the same permission again should not change the size.");
+
+        area.removePermission(p1);
+        assertEquals(0, area.getPermissions().size(), "Area must have zero permissions after removal.");
+    }
 }

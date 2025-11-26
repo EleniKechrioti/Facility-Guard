@@ -3,7 +3,6 @@ package org.aueb.domain;
 import org.aueb.util.enumerations.ActivityStatus;
 import org.aueb.util.enumerations.UserType;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -13,12 +12,14 @@ public class UserTest {
 
     private User testUser;
     private User adminUser;
+    private User visitor;
     private Date futureDate;
 
     @BeforeEach
     void setUp() {
         testUser = new User("tester", "p", "T", "T", "t@t.com", UserType.Employee);
         adminUser = new User("admin", "pass", "A", "A", "a@a.com", UserType.Administrator);
+        visitor = new User("vis", "p", "V", "V", "v@v.com", UserType.Visitor);
         futureDate = new Date(System.currentTimeMillis() + 86400000);
     }
 
@@ -82,7 +83,6 @@ public class UserTest {
     }
 
     @Test
-    @DisplayName("[7] Correctly remove the assigned AccessCard and clear the bidirectional link")
     void testRemoveAccessCard_BidirectionalCheck() {
         AccessCard card = new AccessCard(futureDate);
         testUser.setAccessCard(card);
@@ -94,6 +94,33 @@ public class UserTest {
     }
 
     @Test
+    void testSetAccessCard_SkipUpdate() {
+        AccessCard card = new AccessCard(futureDate);
+
+        testUser.setAccessCard(card);
+
+        card.setUser(testUser);
+
+        assertDoesNotThrow(() -> testUser.setAccessCard(card),
+                "Should execute without error.");
+
+        assertEquals(testUser, card.getUser(), "Η σχέση πρέπει να παραμείνει αμετάβλητη.");
+    }
+
+    @Test
+    void testUserEquality() {
+        // Arrange
+        User userA = new User("user_a", "p", "T", "T", "a@a.com", UserType.Employee);
+        User userB = new User("user_b", "p", "T", "T", "b@b.com", UserType.Employee);
+
+        assertNotEquals(userA, userB, "Objects with different references must be unequal.");
+
+        assertEquals(testUser, testUser, "An object must equal itself.");
+        assertNotEquals(testUser, null, "Object must not equal null.");
+
+    }
+
+    @Test
     void testRoleChecks_CorrectAssignment() {
         /** Assert Employee   */
         assertTrue(testUser.isEmployee(), "Employee check must be true.");
@@ -102,6 +129,9 @@ public class UserTest {
         /** Assert Admin   */
         assertTrue(adminUser.isAdmin(), "Admin check must be true.");
         assertFalse(adminUser.isEmployee(), "Admin check must be false for Employee role.");
+
+        assertTrue(visitor.isVisitor(), "Visitor check must be true.");
+        assertFalse(visitor.isAdmin(), "Visitor must not be Admin.");
     }
 
     @Test
