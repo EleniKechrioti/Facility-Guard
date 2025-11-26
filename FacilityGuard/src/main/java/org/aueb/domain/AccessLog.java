@@ -125,12 +125,12 @@ public class AccessLog {
         if (!(o instanceof AccessLog)) return false;
         AccessLog accessLog = (AccessLog) o;
 
-        // Αν έχουμε id, συγκρίνουμε με βάση το id
+        /** If we have an id, we compare based on the id   */
         if (logId != 0 && accessLog.logId != 0) {
             return logId == accessLog.logId;
         }
 
-        // Αλλιώς, “λογική” ισότητα – όχι τόσο κρίσιμη στα tests
+        /** Otherwise, "logical" equality – not so critical in tests   */
         return Objects.equals(timestamp, accessLog.timestamp)
                 && accessGranted == accessLog.accessGranted
                 && accessType == accessLog.accessType;

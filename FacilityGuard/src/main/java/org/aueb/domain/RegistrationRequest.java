@@ -34,9 +34,8 @@ public class RegistrationRequest {
     @Column(name = "status", nullable = false)
     private ActivityStatus status;
 
-    // ⬇️ ΣΧΕΣΗ MANY-TO-ONE με User (Non-Owning Side: Request, Owning Side: User - FK: user_fk)
-    /**
-     * Relationship Many-to-One with User (RegistationRequest is the owning side)
+
+     /** Relationship Many-to-One with User (RegistationRequest is the owning side)
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_fk", referencedColumnName = "id", nullable = false)

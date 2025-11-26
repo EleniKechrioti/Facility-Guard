@@ -64,10 +64,10 @@ public class UserTest {
     void testIssueAccessCard_CardAlreadyExistsFailure() {
         RegistrationRequest request = testUser.submitRegistrationRequest();
         request.setApprovedStatus(true, adminUser);
-        testUser.issueAccessCard(futureDate); // Issue first card successfully
+        testUser.issueAccessCard(futureDate); /** Issue first card successfully  */
 
         assertThrows(IllegalStateException.class, () -> {
-            testUser.issueAccessCard(futureDate); // Attempt to issue second card
+            testUser.issueAccessCard(futureDate); /** Attempt to issue second card  */
         }, "Should throw exception when user already has an access card.");
     }
 
@@ -95,11 +95,11 @@ public class UserTest {
 
     @Test
     void testRoleChecks_CorrectAssignment() {
-        // Assert Employee
+        /** Assert Employee   */
         assertTrue(testUser.isEmployee(), "Employee check must be true.");
         assertFalse(testUser.isAdmin(), "Employee check must be false for Admin role.");
 
-        // Assert Admin
+        /** Assert Admin   */
         assertTrue(adminUser.isAdmin(), "Admin check must be true.");
         assertFalse(adminUser.isEmployee(), "Admin check must be false for Employee role.");
     }
@@ -108,7 +108,7 @@ public class UserTest {
     void testCheckPassword() {
         testUser.setPassword("MySecurePassword123");
 
-        // Assert
+        /** Assert   */
         assertTrue(testUser.checkPassword("MySecurePassword123"), "Check must succeed with correct password.");
         assertFalse(testUser.checkPassword("WrongPassword"), "Check must fail with incorrect password.");
     }

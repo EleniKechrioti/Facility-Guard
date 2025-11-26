@@ -123,7 +123,7 @@ public class AccessCard {
     /** Helper Method for bidirectional consistency (ADD Permission)  */
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
-        /** Διασφαλίζει ότι το Permission (Owning Side) δείχνει σε αυτήν την κάρτα  */
+        /** Ensures that the Permission (Owning Side) points to this card.  */
         if (permission.getAccessCard() != this) {
             permission.setAccessCard(this);
         }

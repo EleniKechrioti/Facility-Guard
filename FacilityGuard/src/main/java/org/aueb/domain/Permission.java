@@ -15,7 +15,7 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int permissionId;
 
-    /** Τύπος άδειας (AccessGranted/AccessDenied). */
+    /** Permission type (AccessGranted/AccessDenied). */
     @Enumerated(EnumType.STRING)
     @Column(name = "access_granted", nullable = false)
     private PermissionType accessGranted;

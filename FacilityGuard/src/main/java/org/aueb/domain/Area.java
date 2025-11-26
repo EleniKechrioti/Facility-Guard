@@ -146,10 +146,10 @@ public class Area implements Serializable {
      * Removes the symmetrical neighbor relationship.
      */
     public void removeNeighbor(Area neighbor) {
-        // Remove the neighbor from this area's list
+        /** Remove the neighbor from this area's list  */
         this.neighbors.remove(neighbor);
 
-        // remove this area from the neighbor's list
+        /** remove this area from the neighbor's list  */
         neighbor.getNeighbors().remove(this);
     }
 
