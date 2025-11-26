@@ -27,7 +27,7 @@ public class Checkpoint implements Serializable {
     public Checkpoint() {}
 
     public Checkpoint(String name) {
-        this.name = name;
+        setName(name);
     }
 
     public int getCheckpointId() {

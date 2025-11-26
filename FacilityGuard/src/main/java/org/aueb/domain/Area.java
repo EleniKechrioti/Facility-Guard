@@ -68,8 +68,8 @@ public class Area implements Serializable {
      * Constructor for creating a new Area object.
      */
     public Area(String name, Building building) {
-        this.name = name;
-        this.building = building;
+        setName(name);
+        setBuilding(building);
     }
 
     // --- Getters and Setters ---

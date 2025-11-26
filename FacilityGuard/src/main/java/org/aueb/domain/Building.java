@@ -54,8 +54,8 @@ public class Building implements Serializable {
      * Constructor for creating a new Building object.
      */
     public Building(String name, Address address) {
-        this.name = name;
-        this.address = address;
+        setName(name);
+        setAddress(address);
     }
 
     // --- Getters and Setters ---

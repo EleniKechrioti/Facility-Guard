@@ -52,8 +52,8 @@ public class AccessCard {
     /** Constructor used when Access Card is issued
      */
     public AccessCard(Date expirationDate) {
-        this.expirationDate = expirationDate;
-        this.status = ActivityStatus.Active; /** starts with ACTIVE */
+        setExpirationDate(expirationDate);
+        setStatus(ActivityStatus.Active); /** starts with ACTIVE */
     }
 
     // ------------------- Business Methods -------------------

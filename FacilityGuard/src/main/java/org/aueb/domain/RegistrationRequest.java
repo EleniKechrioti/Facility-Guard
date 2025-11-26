@@ -43,10 +43,9 @@ public class RegistrationRequest {
 
     /** Default Constructor   */
     public RegistrationRequest() {
-        this.requestDate = new Date();
+        setRequestDate(new Date());
         this.approved = false;
-        /** Every new request starts as Active, in order to prevent a new submission. */
-        this.status = ActivityStatus.Active;
+        setStatus(ActivityStatus.Active);
     }
 
     // ------------------- Business Methods -------------------
