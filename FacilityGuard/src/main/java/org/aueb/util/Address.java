@@ -3,9 +3,7 @@ package org.aueb.util;
 import jakarta.persistence.*;
 
 /**
- * Η ταχυδρομική διεύθυνση.
- * @author Νίκος Διαμαντίδης
- *
+ * The mailing address.
  */
 @Embeddable
 public class Address {
@@ -59,7 +57,6 @@ public class Address {
 
     /**
      * Return the street
-     * @return the street
      */
     public String getStreet() {
         return street;
@@ -75,7 +72,6 @@ public class Address {
 
     /**
      * Returns the number
-     * @return the number
      */
     public String getNumber() {
         return number;
@@ -83,7 +79,6 @@ public class Address {
 
     /**
      * Sets the city
-     * @param city the city
      */
     public void setCity(String city) {
         this.city = city;
@@ -92,7 +87,6 @@ public class Address {
 
     /**
      * Returns the city
-     * @return the city
      */
     public String getCity() {
         return city;
@@ -100,7 +94,6 @@ public class Address {
 
     /**
      * Sets the zip code
-     * @param zipcode the zipcode
      */
     public void setZipCode(String zipcode) {
         this.zipcode = zipcode;
@@ -108,7 +101,6 @@ public class Address {
 
     /**
      * Returns the zipcode
-     * @return the zipcode
      */
     public String getZipCode() {
         return zipcode;
@@ -116,7 +108,6 @@ public class Address {
 
     /**
      * Sets the country
-     * @param country the country
      */
     public void setCountry(String country) {
         this.country = country;
@@ -124,7 +115,6 @@ public class Address {
 
     /**
      * Returns the country
-     * @return the country
      */
     public String getCountry() {
         return country;

@@ -12,7 +12,7 @@ public class AccessCardTest {
 
     @BeforeEach
     void setUp() {
-        // Δημιουργούμε μια κάρτα με ημερομηνία λήξης
+        /** We create a card with an expiration date  */
         Date tomorrow = new Date(System.currentTimeMillis() + 86400000);
         activeCard = new AccessCard(tomorrow); // Ξεκινάει ACTIVE
     }
@@ -33,9 +33,9 @@ public class AccessCardTest {
 
     @Test
     void testDeactivateCard_FailureAlreadyInactive() {
-        activeCard.deactivateCard(); // Πρώτη απενεργοποίηση επιτυχής
+        activeCard.deactivateCard(); /** First deactivation is successful */
 
-        // Δεύτερη απενεργοποίηση αποτυγχάνει
+        /** Second deactivation should fail  */
         assertThrows(IllegalStateException.class, () -> activeCard.deactivateCard(),
                 "Cannot deactivate an already INACTIVE card.");
     }

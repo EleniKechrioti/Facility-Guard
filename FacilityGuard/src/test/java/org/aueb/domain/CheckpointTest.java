@@ -24,7 +24,7 @@ public class CheckpointTest {
         Checkpoint cp1 = new Checkpoint("Reader 1");
         Checkpoint cp2 = new Checkpoint("Reader 1");
 
-        assertEquals(cp1, cp2);  // equal by name before persist
+        assertEquals(cp1, cp2);  /** equal by name before persist  */
     }
 
     @Test

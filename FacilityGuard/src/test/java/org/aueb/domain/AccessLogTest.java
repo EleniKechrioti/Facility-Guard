@@ -8,19 +8,16 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests για την κλάση AccessLog (χωρίς ΒΔ).
- */
 public class AccessLogTest {
 
     @Test
     void createAccessLog_setsFieldsCorrectly_andLinksToCardAndCheckpoint() {
-        // Arrange
+        /** Arrange  */
         Date exp = new Date();
         AccessCard card = new AccessCard(exp);
         Checkpoint checkpoint = new Checkpoint("Main Gate");
 
-        // Act
+        /** Act   */
         AccessLog log = new AccessLog(
                 PermissionType.AccessGranted,
                 AccessType.In,
@@ -28,16 +25,16 @@ public class AccessLogTest {
                 checkpoint
         );
 
-        // Assert βασικών πεδίων
+        /** Assert of basic fields  */
         assertNotNull(log.getTimestamp(), "Timestamp must be set.");
         assertEquals(PermissionType.AccessGranted, log.getAccessGranted());
         assertEquals(AccessType.In, log.getAccessType());
 
-        // Assert σχέσεων
+        /** Assert of relationships   */
         assertEquals(card, log.getAccessCard(), "AccessLog must reference the AccessCard.");
         assertEquals(checkpoint, log.getCheckpoint(), "AccessLog must reference the Checkpoint.");
 
-        // Ελέγχουμε και την αμφίδρομη σχέση με την κάρτα
+        /** We also check the bidirectional relationship with the card   */
         assertTrue(card.getAccessLogs().contains(log),
                 "AccessCard must contain the AccessLog in its collection.");
     }

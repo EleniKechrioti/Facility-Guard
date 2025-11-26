@@ -10,18 +10,15 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * JPA tests για την οντότητα AccessLog.
- */
 public class AccessLogJPATest extends JPATest {
 
     /**
-     * Δημιουργεί και αποθηκεύει ένα AccessLog, ελέγχοντας ότι
-     * οι σχέσεις με AccessCard και Checkpoint αποθηκεύονται σωστά.
+     * Creates and saves an AccessLog, checking that
+     * the relationships with AccessCard and Checkpoint are stored correctly.
      */
     @Test
     void createAndPersistAccessLog_withCardAndCheckpoint() {
-        // 1. Βρίσκουμε το Building/Area/Checkpoint που έχει φτιάξει ο Initializer
+        /** We find the Building/Area/Checkpoint that the Initializer has created.   */
         Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
         assertNotNull(persistentBuilding, "Test Building must exist from Initializer.");
 
@@ -29,7 +26,7 @@ public class AccessLogJPATest extends JPATest {
         Checkpoint persistentCheckpoint = persistentArea.getCheckpoints().iterator().next();
         assertNotNull(persistentCheckpoint, "Initializer must have created at least one Checkpoint.");
 
-        // 2. Δημιουργούμε μια νέα κάρτα
+        /**  We create a new Card   */
         AccessCard card = new AccessCard(new Date());
 
         em.getTransaction().begin();
@@ -37,11 +34,11 @@ public class AccessLogJPATest extends JPATest {
         em.getTransaction().commit();
         em.clear();
 
-        // 3. Ξαναπαίρνουμε managed entities
+        /** We re-fetch managed entities */
         AccessCard managedCard = em.find(AccessCard.class, card.getCardId());
         Checkpoint managedCheckpoint = em.find(Checkpoint.class, persistentCheckpoint.getCheckpointId());
 
-        // 4. Δημιουργούμε και αποθηκεύουμε το AccessLog
+        /**  We create and persist the AccessLog   */
         AccessLog log = new AccessLog(
                 PermissionType.AccessGranted,
                 AccessType.In,
@@ -56,7 +53,7 @@ public class AccessLogJPATest extends JPATest {
 
         int logId = log.getLogId();
 
-        // 5. Έλεγχος από τη ΒΔ
+        /**  Check from the DB  */
         AccessLog retrievedLog = em.find(AccessLog.class, logId);
         assertNotNull(retrievedLog, "AccessLog must be persisted and retrievable.");
 
@@ -66,7 +63,7 @@ public class AccessLogJPATest extends JPATest {
         assertNotNull(retrievedLog.getAccessCard(), "AccessCard relation must be loaded.");
         assertNotNull(retrievedLog.getCheckpoint(), "Checkpoint relation must be loaded.");
 
-        // 6. Ελέγχουμε και από την πλευρά της κάρτας (collection)
+        /**  We also check from the card's side (collection)  */
         AccessCard finalCard = em.find(AccessCard.class, managedCard.getCardId());
         assertEquals(1, finalCard.getAccessLogs().size(),
                 "AccessCard must contain exactly one AccessLog.");

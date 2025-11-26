@@ -63,7 +63,7 @@ public class UserJPATest extends JPATest {
      */
     @Test
     void testPersistAndRetrieveUser() {
-        // 1. Arrange: Create a new User
+        /** Arrange: Create a new User   */
         User user1 = createTestUser("user_a", "a@test.com");
         User user2 = createTestUser("user_a", "b@test.com");
 

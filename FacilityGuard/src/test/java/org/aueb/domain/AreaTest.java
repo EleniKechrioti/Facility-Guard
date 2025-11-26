@@ -47,15 +47,15 @@ public class AreaTest {
 
         areaA.addNeighbor(areaB);
 
-        //A must-have B as a neighbor
+        /**  A must-have B as a neighbor   */
         assertEquals(1, areaA.getNeighbors().size(), "Area A must have one neighbor.");
         assertTrue(areaA.getNeighbors().contains(areaB), "Area A's set must contain Area B.");
 
-        //B must-have A as a neighbor
+        /**  B must-have A as a neighbor   */
         assertEquals(1, areaB.getNeighbors().size(), "Area B must have one neighbor (symmetrical).");
         assertTrue(areaB.getNeighbors().contains(areaA), "Area B's set must contain Area A.");
 
-        //Area C has no neighbor
+        /** Area C has no neighbor    */
         assertFalse(areaA.isNeighborOf(areaC), "Area A must NOT recognize Area C as neighbor.");
         assertFalse(areaA.isNeighborOf(null), "Should return false for null input.");
     }

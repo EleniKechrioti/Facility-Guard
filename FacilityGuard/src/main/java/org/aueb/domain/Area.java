@@ -9,7 +9,6 @@ import java.util.Set;
 /**
  * Represents a secured area or zone within a Building.
  * Access to an Area is controlled by one or more Checkpoints.
- * This entity implements Serializable as required for JPA entities in enterprise environments.
  */
 @Entity
 @Table(name = "areas")
@@ -67,8 +66,6 @@ public class Area implements Serializable {
 
     /**
      * Constructor for creating a new Area object.
-     * @param name The name of the area.
-     * @param building The parent Building entity.
      */
     public Area(String name, Building building) {
         this.name = name;
@@ -77,58 +74,38 @@ public class Area implements Serializable {
 
     // --- Getters and Setters ---
 
-    /**
-     * Returns the unique ID of the area.
-     * @return the area ID.
-     */
+
     public int getAreaId() { return areaId; }
 
-    /**
-     * Sets the unique ID of the area.
-     * @param areaId the area ID.
-     */
     public void setAreaId(int areaId) { this.areaId = areaId; }
 
-    /**
-     * Returns the name of the area.
-     * @return the area name.
-     */
     public String getName() { return name; }
 
-    /**
-     * Sets the name of the area.
-     * @param name the area name.
-     */
     public void setName(String name) { this.name = name; }
 
     /**
      * Returns the parent Building entity.
-     * @return the associated Building.
      */
     public Building getBuilding() { return building; }
 
     /**
      * Sets the parent Building entity.
-     * @param building the parent Building to set.
      */
     public void setBuilding(Building building) { this.building = building; }
 
     /**
      * Returns the set of Checkpoints associated with this Area.
-     * @return the collection of Checkpoint entities.
      */
     public Set<Checkpoint> getCheckpoints() { return checkpoints; }
 
     /**
      * Sets the set of Checkpoints.
-     * @param checkpoints the set of Checkpoints.
      */
     public void setCheckpoints(Set<Checkpoint> checkpoints) { this.checkpoints = checkpoints; }
 
 
     /**
      * Adds a Checkpoint to the collection.
-     * @param checkpoint The Checkpoint to add.
      */
     public void addCheckpoint(Checkpoint checkpoint) {
         checkpoints.add(checkpoint);
@@ -137,7 +114,6 @@ public class Area implements Serializable {
 
     /**
      * Removes a Checkpoint from the collection.
-     * @param checkpoint The Checkpoint to remove.
      */
     public void removeCheckpoint(Checkpoint checkpoint) {
         checkpoints.remove(checkpoint);
@@ -146,7 +122,6 @@ public class Area implements Serializable {
 
     /**
      * Returns the set of neighboring Areas.
-     * @return the set of neighbors.
      */
     public Set<Area> getNeighbors() {
         return neighbors;
@@ -154,7 +129,6 @@ public class Area implements Serializable {
 
     /**
      * Sets the set of neighbors.
-     * @param neighbors the set of neighbors.
      */
     public void setNeighbors(Set<Area> neighbors) {
         this.neighbors = neighbors;
@@ -162,7 +136,6 @@ public class Area implements Serializable {
 
     /**
      * Adds a neighbor to the set.
-     * @param neighbor The Area to add as a neighbor.
      */
     public void addNeighbor(Area neighbor) {
         this.neighbors.add(neighbor);
@@ -171,7 +144,6 @@ public class Area implements Serializable {
 
     /**
      * Removes the symmetrical neighbor relationship.
-     * @param neighbor The Area to remove.
      */
     public void removeNeighbor(Area neighbor) {
         // Remove the neighbor from this area's list
@@ -183,7 +155,6 @@ public class Area implements Serializable {
 
     /**
      * Checks if this {@link Area} object is a neighbor of another Area object.
-     * @param otherArea The area to be compared.
      * @return true if the otherArea is contained in the neighbor's set.
      */
     public boolean isNeighborOf(Area otherArea) {
@@ -195,7 +166,6 @@ public class Area implements Serializable {
 
     /**
      * Searches for a checkpoint within the Area object by its name.
-     * @param name the name of the checkpoint
      * @return the checkpoint if its found, else null.
      */
     public Checkpoint getCheckpointByName(String name) {
@@ -229,7 +199,6 @@ public class Area implements Serializable {
 
     /**
      * Implements equality based on the primary key (areaId).
-     * @param o the other object.
      * @return {@code true} if the objects are equal.
      */
     @Override
@@ -251,8 +220,7 @@ public class Area implements Serializable {
     }
 
     /**
-     * Returns a string representation of the Area object, useful for logging and debugging.
-     * @return a string representation of the object.
+     * Returns a string representation of the Area object.
      */
     @Override
     public String toString() {

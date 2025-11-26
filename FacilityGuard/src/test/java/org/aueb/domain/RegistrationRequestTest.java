@@ -21,7 +21,7 @@ public class RegistrationRequestTest {
 
     @Test
     void testSetApprovedStatus_SuccessApproval() {
-        // Ο Admin εγκρίνει
+        /** Admin approves  */
         assertDoesNotThrow(() ->
                 request.setApprovedStatus(true, adminUser));
 
@@ -32,7 +32,7 @@ public class RegistrationRequestTest {
 
     @Test
     void testSetApprovedStatus_SuccessRejection() {
-        // Ο Admin απορρίπτει
+        /** Admin rejects   */
         assertDoesNotThrow(() ->
                 request.setApprovedStatus(false, adminUser));
 
@@ -43,7 +43,7 @@ public class RegistrationRequestTest {
 
     @Test
     void testSetApprovedStatus_FailureUnauthorizedUser() {
-        // Ο Employee επιχειρεί να εγκρίνει
+        /** Employee tries to approve   */
         assertThrows(SecurityException.class, () ->
                 request.setApprovedStatus(true, employeeUser));
 
@@ -52,10 +52,10 @@ public class RegistrationRequestTest {
 
     @Test
     void testSetApprovedStatus_FailureInactiveRequest() {
-        // Κάνουμε το αίτημα INACTIVE
+        /** Sets the status to Inactive   */
         request.setStatus(ActivityStatus.Inactive);
 
-        // Ο Admin επιχειρεί να το αλλάξει
+        /** Admin tries to change it   */
         assertThrows(IllegalStateException.class, () ->
                         request.setApprovedStatus(true, adminUser),
                 "Cannot change status for an already INACTIVE request.");

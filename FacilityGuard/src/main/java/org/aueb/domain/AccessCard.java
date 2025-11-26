@@ -12,54 +12,54 @@ import java.util.Objects;
 @Table(name = "access_card")
 public class AccessCard {
 
-    /** Ο μοναδικός αναγνωριστικός αριθμός της κάρτας (Primary Key). */
+    /** Primary Key */
     @Id
     @Column(name = "card_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int cardId;
 
-    /** Η ημερομηνία λήξης της κάρτας. */
+
     @Temporal(TemporalType.DATE)
     @Column(name = "expiration_date", nullable = false)
     private Date expirationDate;
 
-    /** Η τρέχουσα κατάσταση της κάρτας (ACTIVE/INACTIVE). */
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ActivityStatus status;
 
-    // ⬇️ ΣΧΕΣΗ 1:1 (One-to-One) με User (Non-Owning Side)
-    // mappedBy="accessCard" δείχνει στο πεδίο accessCard της κλάσης User (Owning Side).
+    /** Relationship One-to-One with User (User is the owning side)
+     */
     @OneToOne(mappedBy = "accessCard", fetch = FetchType.LAZY)
     private User user;
 
-    // ⬇️ ΣΧΕΣΗ 1:Ν με Permission (Non-Owning Side - Συλλογή)
+    /** Relationship One-to-Many with Permission (Permission is the owning side)
+      */
     @OneToMany(mappedBy = "accessCard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Permission> permissions = new HashSet<>();
 
-    // ⬇️ ΣΧΕΣΗ 1:Ν με AccessLog (Non-Owning Side - Συλλογή)
+    /** Relationship One-to-Many with AccessLog (AccessLog is the owning side)
+      */
     @OneToMany(mappedBy = "accessCard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<AccessLog> accessLogs = new HashSet<>();
 
-    // Default Constructor
+    /** Default Constructor
+     */
     public AccessCard() {
         this.status = ActivityStatus.Inactive;
     }
 
-    /**
-     * Constructor που χρησιμοποιείται κατά την έκδοση της κάρτας.
-     * @param expirationDate Η ημερομηνία λήξης.
+    /** Constructor used when Access Card is issued
      */
     public AccessCard(Date expirationDate) {
         this.expirationDate = expirationDate;
-        this.status = ActivityStatus.Active; // Η κάρτα ξεκινάει ως ACTIVE
+        this.status = ActivityStatus.Active; /** starts with ACTIVE */
     }
 
     // ------------------- Business Methods -------------------
 
     /**
-     * Ακυρώνει την κάρτα και την θέτει σε INACTIVE.
-     * @throws IllegalStateException αν η κάρτα είναι ήδη ανενεργή.
+     * Deactivates card and sets it as inactive
      */
     public void deactivateCard() {
         if (this.status == ActivityStatus.Inactive) {
@@ -67,8 +67,6 @@ public class AccessCard {
         }
         this.status = ActivityStatus.Inactive;
 
-        // ΣΗΜΕΙΩΣΗ: Η ενημέρωση του σχετικού RegistrationRequest σε INACTIVE
-        // πρέπει να γίνει στο Service Layer.
     }
 
     /**
@@ -81,8 +79,8 @@ public class AccessCard {
             return false;
         }
 
-        // 2. Check expiration date against the current time
-        // The card is valid if the current time is BEFORE the expiration date.
+        /** Check expiration date against the current time
+        *The card is valid if the current time is BEFORE the expiration date.  */
         return this.expirationDate.after(new Date());
     }
 
@@ -99,7 +97,7 @@ public class AccessCard {
 
     // ------------------- Getters and Setters -------------------
 
-    // Getters/Setters for simple fields
+    /** Getters/Setters for simple fields */
     public int getCardId() { return cardId; }
 
     public Date getExpirationDate() { return expirationDate; }
@@ -108,13 +106,13 @@ public class AccessCard {
     public ActivityStatus getStatus() { return status; }
     public void setStatus(ActivityStatus status) { this.status = status; }
 
-    // Getters/Helpers for Relationships
+    /** Getters/Setters for Relationships  */
     public User getUser() { return user; }
 
-    // Helper Method για αμφίδρομη συνοχή (User - Σχέση 1:1)
+    /** Helper Method for bidirectional consistency (User - 1:1 Relationship)  */
     public void setUser(User user) {
         this.user = user;
-        // Διασφαλίζει ότι ο User (Owning Side) δείχνει σε αυτήν την κάρτα
+        /** Ensures that the User (Owning Side) points to this card. */
         if (user != null && user.getAccessCard() != this) {
             user.setAccessCard(this);
         }
@@ -122,10 +120,10 @@ public class AccessCard {
 
     public Set<Permission> getPermissions() { return permissions; }
 
-    // Helper Method για αμφίδρομη συνοχή (ADD Permission)
+    /** Helper Method for bidirectional consistency (ADD Permission)  */
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
-        // Διασφαλίζει ότι το Permission (Owning Side) δείχνει σε αυτήν την κάρτα
+        /** Διασφαλίζει ότι το Permission (Owning Side) δείχνει σε αυτήν την κάρτα  */
         if (permission.getAccessCard() != this) {
             permission.setAccessCard(this);
         }
@@ -133,10 +131,10 @@ public class AccessCard {
 
     public Set<AccessLog> getAccessLogs() { return accessLogs; }
 
-    // Helper Method για αμφίδρομη συνοχή (ADD AccessLog)
+    /** Helper Method for bidirectional consistency (ADD AccessLog)  */
     public void addAccessLog(AccessLog accessLog) {
         this.accessLogs.add(accessLog);
-        // Διασφαλίζει ότι το AccessLog (Owning Side) δείχνει σε αυτήν την κάρτα
+        /** Ensures that the AccessLog (Owning Side) points to this card  */
         if (accessLog.getAccessCard() != this) {
             accessLog.setAccessCard(this);
         }

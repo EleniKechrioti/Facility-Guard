@@ -24,7 +24,7 @@ public class CheckpointJPATest {
         EntityManager em = JPAUtil.getCurrentEntityManager();
         em.getTransaction().begin();
 
-        // --- Create Building + Area ---
+        /** Create Building + Area   */
         Address address = new Address("Test St", "10", "Athens", "11111", "Greece");
         Building building = new Building("HQ", address);
         Area area = new Area("Server Room", building);
@@ -32,15 +32,15 @@ public class CheckpointJPATest {
         em.persist(building);
         em.persist(area);
 
-        // --- Create AccessCard (required by Permission) ---
+        /** Create AccessCard (required by Permission) */
         AccessCard card = new AccessCard(new Date());
         em.persist(card);
 
-        // --- Create Permission (REQUIRES AccessCard) ---
+        /** Create Permission (REQUIRES AccessCard) */
         Permission permission = new Permission(PermissionType.AccessGranted, card, area);
         em.persist(permission);
 
-        // --- Create Checkpoint ---
+        /** Create Checkpoint   */
         Checkpoint cp = new Checkpoint("Door Reader A");
         cp.setArea(area);
         cp.setPermission(permission);
@@ -49,7 +49,7 @@ public class CheckpointJPATest {
 
         em.getTransaction().commit();
 
-        // --- Validate Load ---
+        /**  Validate Load   */
         EntityManager em2 = JPAUtil.getCurrentEntityManager();
         Checkpoint loaded = em2.find(Checkpoint.class, cp.getCheckpointId());
 

@@ -22,14 +22,14 @@ public class BuildingJPATest extends JPATest{
         em.persist(newBuilding);
         em.getTransaction().commit();
 
-        em.clear(); // Clear context
+        em.clear(); /** Clear context  */
 
         Building retrievedBuilding = em.find(Building.class, newBuilding.getBuildingId());
 
         assertNotNull(retrievedBuilding, "The Building entity must be retrieved successfully.");
         assertEquals("AUEB Building 1", retrievedBuilding.getName());
 
-        //Check if Address was saved via cascade
+        /**  Check if Address was saved via cascade  */
         assertNotNull(retrievedBuilding.getAddress(), "The associated Address must not be null.");
         assertEquals("Athens", retrievedBuilding.getAddress().getCity(), "Address city must match the original value.");
     }
@@ -53,7 +53,7 @@ public class BuildingJPATest extends JPATest{
 
         em.clear();
 
-        // Assert: Retrieve and verify the update
+        /** Assert: Retrieve and verify the update   */
         Building retrievedBuilding = em.find(Building.class, newBuilding.getBuildingId());
         assertEquals(updatedName, retrievedBuilding.getName(), "The Building name must be updated successfully.");
     }

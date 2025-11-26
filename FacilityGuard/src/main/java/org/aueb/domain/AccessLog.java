@@ -8,54 +8,51 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * Καταγραφή ενός συμβάντος πρόσβασης.
- * Κάθε φορά που μία AccessCard χρησιμοποιείται σε ένα Checkpoint,
- * δημιουργείται ένα AccessLog.
+ * Logging of an access event.
+ * Every time an AccessCard is used at a Checkpoint,
+ * an AccessLog is created.
  */
 @Entity
 @Table(name = "access_log")
 public class AccessLog {
 
-    /** Πρωτεύον κλειδί. */
+    /** Primary key */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "log_id")
     private int logId;
 
-    /** Ημερομηνία και ώρα του συμβάντος. */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "timestamp", nullable = false)
     private Date timestamp;
 
-    /** Αν η πρόσβαση εγκρίθηκε ή απορρίφθηκε. */
     @Enumerated(EnumType.STRING)
     @Column(name = "access_granted", nullable = false)
     private PermissionType accessGranted;
 
-    /** Είσοδος ή έξοδος. */
+    /** Entrance or Exit from an Area */
     @Enumerated(EnumType.STRING)
     @Column(name = "access_type", nullable = false)
     private AccessType accessType;
 
-    /** Κάρτα που χρησιμοποιήθηκε. (Many-to-One, owning side) */
+    /** Card that was used (Many-to-One, owning side) */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_fk", referencedColumnName = "card_id", nullable = false)
     private AccessCard accessCard;
 
-    /** Checkpoint στο οποίο έγινε το συμβάν. (Many-to-One, owning side) */
+    /** CheckpointId (Many-to-One, owning side) */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checkpoint_fk", nullable = false)
     private Checkpoint checkpoint;
 
     // ================= Constructors =================
 
-    /** Απαραίτητος default constructor για JPA. */
+    /** default constructor */
     public AccessLog() {
     }
 
     /**
-     * Βασικός constructor που χρησιμοποιείται από το domain.
-     * Θέτει την timestamp στην τρέχουσα στιγμή.
+     * Basic constructor
      */
     public AccessLog(PermissionType accessGranted,
                      AccessType accessType,
@@ -103,8 +100,7 @@ public class AccessLog {
     }
 
     /**
-     * Helper setter για να κρατάμε αμφίδρομη τη σχέση
-     * με την AccessCard (μέσω του accessLogs set).
+     * Helper Method for bidirectional consistency with AccessCard
      */
     public void setAccessCard(AccessCard accessCard) {
         this.accessCard = accessCard;

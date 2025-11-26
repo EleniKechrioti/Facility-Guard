@@ -71,7 +71,7 @@ public class User {
      */
     public User() {}
 
-    // Parameterized Constructor
+    /** Parameterized Constructor  */
     public User(String username, String password, String firstName, String lastName, String email, UserType userType){
         setUsername(username);
         setPassword(password);
@@ -333,7 +333,6 @@ public class User {
 
     /**
      * Returns a string representation of the User object
-     * @return a string representation of the object
      */
     @Override
     public String toString() {

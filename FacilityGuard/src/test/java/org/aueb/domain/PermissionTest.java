@@ -19,20 +19,20 @@ public class PermissionTest {
 
     @BeforeEach
     void setUp() {
-        // Δημιουργία χρηστών με διαφορετικούς ρόλους
+        /** Creation of users with different roles   */
         adminUser = new User("admin", "pass", "A", "A", "a@a.com", UserType.Administrator);
         employeeUser = new User("emp", "pass", "E", "E", "e@e.com", UserType.Employee);
 
-        // Δημιουργία κάρτας (χρησιμοποιείται μόνο για σύνδεση)
+        /** Creation of card (used only for login)  */
         testCard = new AccessCard(new Date(System.currentTimeMillis() + 86400000)); // Λήγει αύριο
         area = new Area("Test Area", new Building("Test Building", null));
-        // Δημιουργία αρχικής άδειας
+        /**  Creation of new Permission   */
         permission = new Permission(PermissionType.AccessDenied, testCard, area);
     }
 
     @Test
     void testUpdatePermissionType_SuccessByAdministrator() {
-        // Ο Administrator αλλάζει την άδεια σε Granted
+        /** The Administrator changes the Permission to Granted   */
         assertDoesNotThrow(() ->
                         permission.updatePermissionType(PermissionType.AccessGranted, adminUser),
                 "Administrator should be able to update the permission type.");
@@ -43,12 +43,12 @@ public class PermissionTest {
 
     @Test
     void testUpdatePermissionType_FailureByEmployee() {
-        // Ο Employee επιχειρεί να αλλάξει την άδεια - Πρέπει να πετάξει SecurityException
+        /**  Employee tries to change the persmission - Should throw a SecurityException   */
         assertThrows(SecurityException.class, () ->
                         permission.updatePermissionType(PermissionType.AccessGranted, employeeUser),
                 "Non-Administrator user must throw SecurityException.");
 
-        // Επιβεβαιώνουμε ότι η τιμή δεν άλλαξε
+        /** We confirm that the value did not change  */
         assertEquals(PermissionType.AccessDenied, permission.getAccessGranted(),
                 "PermissionType should remain AccessDenied after unauthorized attempt.");
     }

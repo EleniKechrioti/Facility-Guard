@@ -5,12 +5,13 @@ package org.aueb.util;
  */
 public final class PasswordEncoder {
 
-    // The BCrypt work factor (cost). Higher value means slower execution,
-    // which increases security against brute-force attacks. 10-12 is common.
+    /** The BCrypt work factor (cost). Higher value means slower execution,
+    * which increases security against brute-force attacks. 10-12 is common.
+     */
     private static final int LOG_ROUNDS = 12;
 
     private PasswordEncoder() {
-        // Prevent instantiation
+        /** Prevent instantiation  */
     }
 
     /**
@@ -19,7 +20,7 @@ public final class PasswordEncoder {
      * @return The resulting BCrypt hash string.
      */
     public static String encode(String rawPassword) {
-        // The BCrypt class handles salting automatically within gensalt() and hashpw().
+        /** The BCrypt class handles salting automatically within gensalt() and hashpw().  */
         return org.mindrot.jbcrypt.BCrypt.hashpw(rawPassword, org.mindrot.jbcrypt.BCrypt.gensalt(LOG_ROUNDS));
     }
 

@@ -49,19 +49,19 @@ public class Initializer {
 
         Area serverRoom = new Area("Server Room 101", testBuilding);
 
-        // Checkpoint (Συνδεδεμένο με την Area)
+        /** Checkpoint (Linked with Area)   */
         Checkpoint cp1 = new Checkpoint("Server Room Reader");
 
-        // 4. Σύνδεση Σχέσεων
+        /**  Relationships Connection   */
 
-        // Building <-> Area
+        /** Building <-> Area   */
         testBuilding.addArea(serverRoom);
 
-        // Area <-> Checkpoint
+        /** Area <-> Checkpoint   */
         serverRoom.addCheckpoint(cp1);
 
         em.persist(user);
-        em.persist(testBuilding); // Persist the parent entity
+        em.persist(testBuilding); /** Persist the parent entity  */
 
         tx.commit();
 

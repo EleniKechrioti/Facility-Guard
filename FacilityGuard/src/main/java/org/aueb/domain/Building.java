@@ -52,8 +52,6 @@ public class Building implements Serializable {
 
     /**
      * Constructor for creating a new Building object.
-     * @param name The name of the building.
-     * @param address The associated Address entity.
      */
     public Building(String name, Address address) {
         this.name = name;
@@ -64,55 +62,46 @@ public class Building implements Serializable {
 
     /**
      * Returns the Buildings id.
-     * @return the building's id.
      */
     public int getBuildingId() { return buildingId; }
 
     /**
      * Sets the building's id
-     * @param buildingId the buildings id
      */
     public void setBuildingId(int buildingId) { this.buildingId = buildingId; }
 
     /**
      * Returns the name of the building.
-     * @return the name of the building
      */
     public String getName() { return name; }
 
     /**
      * Sets the name of the building
-     * @param name the name of the building.
      */
     public void setName(String name) { this.name = name; }
 
     /**
      * Returns the address of the building
-     * @return the address of the building
      */
     public Address getAddress() { return address; }
 
     /**
      * Sets the address of the building
-     * @param address the address of the building
      */
     public void setAddress(Address address) { this.address = address; }
 
     /**
      * Returns the area set of the building
-     * @return the area set
      */
     public Set<Area> getAreas() { return areas; }
 
     /**
      * Sets the area set of the building
-     * @param areas the area set
      */
     public void setAreas(Set<Area> areas) { this.areas = areas; }
 
     /**
      * Adds an Area to the collection
-     * @param area The Area to add.
      */
     public void addArea(Area area) {
         areas.add(area);
@@ -121,7 +110,6 @@ public class Building implements Serializable {
 
     /**
      * Removes an Area from the collection.
-     * @param area The Area to remove.
      */
     public void removeArea(Area area) {
         areas.remove(area);
@@ -130,7 +118,6 @@ public class Building implements Serializable {
 
     /**
      * Searches for an area within a Building with its name.
-     * @param name the name of the area to be searched
      * @return the area if its found, else null.
      */
     public Area getAreaByName(String name) {
@@ -145,7 +132,6 @@ public class Building implements Serializable {
 
     /**
      * Checks if the building contains an area with a specific ID.
-     * @param areaId the ID of the area to be checked
      * @return true if its found.
      */
     public boolean containsArea(int areaId) {

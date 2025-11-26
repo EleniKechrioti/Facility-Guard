@@ -312,7 +312,7 @@ public class AreaJPATest extends JPATest{
 
         em.close();
 
-        //Use a new entity manager for the retrieval
+        /** Use a new entity manager for the retrieval  */
         EntityManager em2 = JPAUtil.getCurrentEntityManager();
         Area retrievedArea = em2.find(Area.class, areaId);
         em2.close();

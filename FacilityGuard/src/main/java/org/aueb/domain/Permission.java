@@ -20,7 +20,7 @@ public class Permission {
     @Column(name = "access_granted", nullable = false)
     private PermissionType accessGranted;
 
-    // ΣΧΕΣΗ MANY-TO-ONE με AccessCard (Owning Side)
+    /** Relationship MANY-TO-ONE with AccessCard (Owning Side)  */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_fk", referencedColumnName = "card_id", nullable = false)
     private AccessCard accessCard;
@@ -33,7 +33,7 @@ public class Permission {
     public Permission() {}
 
     /**
-     * Constructor για τη δημιουργία νέας άδειας.
+     * Constructor for new Permission object creation.
      */
     public Permission(PermissionType accessGranted, AccessCard accessCard, Area area) {
         this.accessGranted = accessGranted;
@@ -44,18 +44,18 @@ public class Permission {
     // ------------------- Business Method -------------------
 
     /**
-     * Ενημερώνει το PermissionType της άδειας, με έλεγχο ρόλου.
-     * @param newType Το νέο PermissionType.
-     * @param actingUser Ο User που επιχειρεί την αλλαγή.
-     * @throws SecurityException αν ο actingUser δεν είναι Administrator.
+     * Updates the PermissionType of the permission, with role checking.
+     * @param newType The new PermissionType.
+     * @param actingUser The User attempting the change.
+     * @throws SecurityException if the actingUser is not an Administrator.
      */
     public void updatePermissionType(PermissionType newType, User actingUser) {
-        // 1. ΕΛΕΓΧΟΣ ΡΟΛΟΥ
+        /** Role Check  */
         if (actingUser == null || actingUser.getUserType() != UserType.Administrator) {
             throw new SecurityException("Only users with the role 'ADMINISTRATOR' can modify the permission type.");
         }
 
-        // 2. Εφαρμογή της αλλαγής (επιτρέπεται)
+        /** Applying the change (allowed)  */
         this.accessGranted = newType;
     }
 
@@ -97,7 +97,6 @@ public class Permission {
 
     /**
      * Sets the Area.
-     * @param area the Area.
      */
     public void setArea(Area area) {
         this.area = area;
