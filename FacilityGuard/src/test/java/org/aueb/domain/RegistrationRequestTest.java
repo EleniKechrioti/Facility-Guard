@@ -16,7 +16,7 @@ public class RegistrationRequestTest {
     void setUp() {
         adminUser = new User("admin", "pass", "A", "A", "a@a.com", UserType.Administrator);
         employeeUser = new User("emp", "pass", "E", "E", "e@e.com", UserType.Employee);
-        request = new RegistrationRequest(); // Ξεκινάει ACTIVE, approved=false
+        request = new RegistrationRequest();
     }
 
     @Test
@@ -59,5 +59,44 @@ public class RegistrationRequestTest {
         assertThrows(IllegalStateException.class, () ->
                         request.setApprovedStatus(true, adminUser),
                 "Cannot change status for an already INACTIVE request.");
+    }
+
+    @Test
+    void testInvalidateRequest_SuccessAndSecurityFailure() {
+        assertDoesNotThrow(() ->
+                request.invalidateRequest(adminUser));
+
+        assertEquals(ActivityStatus.Inactive, request.getStatus(),
+                "Status must be INACTIVE after invalidation.");
+        assertFalse(request.isApproved(), "Approved flag must be set to false after invalidation.");
+
+        request = new RegistrationRequest();
+
+        assertThrows(SecurityException.class, () ->
+                        request.invalidateRequest(employeeUser),
+                "Only an Administrator should be able to invalidate a request.");
+    }
+
+    @Test
+    void testConstructor_InitialState() {
+        assertFalse(request.isApproved(), "New request should start as NOT approved (false).");
+        assertEquals(ActivityStatus.Active, request.getStatus(),
+                "New request should start with ACTIVE status.");
+        assertNotNull(request.getRequestDate(), "Request date must be initialized.");
+    }
+
+    @Test
+    void testSetUser_BidirectionalSafetyCheck() {
+        User user = new User("test_user", "p", "T", "T", "t@t.com", UserType.Employee);
+
+        request.setUser(user);
+
+        assertSame(user, request.getUser(), "User link must be set.");
+        assertTrue(user.getRegistrationRequests().contains(request),
+                "Request must be added to the user's collection.");
+
+        request.setUser(user);
+
+        assertEquals(1, user.getRegistrationRequests().size(), "Set size must not change on second call.");
     }
 }

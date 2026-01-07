@@ -23,7 +23,7 @@ public class RegistrationRequestJPATest {
     @Test
     void testPersistRegistrationRequest() {
 
-        /** Create administrator   */
+        // === Create administrator ===
         em.getTransaction().begin();
         User admin = new User(
                 "adminUser",
@@ -37,7 +37,7 @@ public class RegistrationRequestJPATest {
         em.getTransaction().commit();
         em.clear();
 
-        /** Create RegistrationRequest   */
+        // === Create RegistrationRequest ===
         RegistrationRequest req = new RegistrationRequest();
         req.setUser(em.find(User.class, admin.getUserId()));
 
@@ -46,7 +46,7 @@ public class RegistrationRequestJPATest {
         em.getTransaction().commit();
         em.clear();
 
-        /**  Retrieve  */
+        // === Retrieve ===
         RegistrationRequest saved =
                 em.find(RegistrationRequest.class, req.getRegistrationId());
 
@@ -61,7 +61,7 @@ public class RegistrationRequestJPATest {
     @Test
     void testUpdateApprovedStatus_Approve() {
 
-        /** Setup admin + request   */
+        // === Setup admin + request ===
         em.getTransaction().begin();
         User admin = new User("admin2", "pass", "A", "A", "a@a.com", UserType.Administrator);
         em.persist(admin);
@@ -73,7 +73,7 @@ public class RegistrationRequestJPATest {
         em.getTransaction().commit();
         em.clear();
 
-        /**  Approve   */
+        // === Approve ===
         RegistrationRequest managedReq =
                 em.find(RegistrationRequest.class, req.getRegistrationId());
 
@@ -103,7 +103,7 @@ public class RegistrationRequestJPATest {
         em.getTransaction().commit();
         em.clear();
 
-        /**  Reject   */
+        // === Reject ===
         RegistrationRequest managedReq =
                 em.find(RegistrationRequest.class, req.getRegistrationId());
 
@@ -134,7 +134,7 @@ public class RegistrationRequestJPATest {
         em.getTransaction().commit();
         em.clear();
 
-        /** Invalidate */
+        // === Invalidate ===
         RegistrationRequest managedReq =
                 em.find(RegistrationRequest.class, req.getRegistrationId());
 

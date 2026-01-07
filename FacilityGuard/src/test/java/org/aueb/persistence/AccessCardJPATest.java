@@ -42,14 +42,15 @@ public class AccessCardJPATest extends JPATest{
         Permission p2 = new Permission(PermissionType.AccessDenied, card, area);
 
         em.getTransaction().begin();
-        em.persist(card); /**  cascade persists p1 & p2 (but only 1 kept because of equals/hashCode)  */
+        em.persist(card); // cascade persists p1 & p2 (but only 1 kept because of equals/hashCode)
         em.getTransaction().commit();
         em.clear();
 
         AccessCard saved = em.find(AccessCard.class, card.getCardId());
         assertNotNull(saved);
 
-        /** EXPECTED: Only 1 permission because both have id=0 and equals() treats them as duplicates.   */
+        // === FIXED ===
+        // EXPECTED: Only 1 permission because both have id=0 and equals() treats them as duplicates.
         assertEquals(1, saved.getPermissions().size(),
                 "Only one permission should be stored because equals() compares id=0 for both before persist.");
     }

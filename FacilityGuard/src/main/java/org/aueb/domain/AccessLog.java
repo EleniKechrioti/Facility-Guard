@@ -58,9 +58,9 @@ public class AccessLog {
                      AccessType accessType,
                      AccessCard accessCard,
                      Checkpoint checkpoint) {
-        this.timestamp = new Date();
-        this.accessGranted = accessGranted;
-        this.accessType = accessType;
+        setTimestamp(new Date());
+        setAccessGranted(accessGranted);
+        setAccessType(accessType);
         setAccessCard(accessCard);
         setCheckpoint(checkpoint);
     }

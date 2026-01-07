@@ -75,12 +75,58 @@ public class BuildingTest {
     void containsArea_CheckById() {
         Building building = new Building("ID Check", null);
         Area areaWithId = new Area("ID Area", building);
-        areaWithId.setAreaId(99); // Set a fake ID for domain logic test
+        areaWithId.setAreaId(99);
 
         building.addArea(areaWithId);
 
         assertTrue(building.containsArea(99), "Should return true for a contained Area's ID.");
         assertFalse(building.containsArea(100), "Should return false for a non-existent ID.");
         assertFalse(building.containsArea(0), "Should return false for an invalid ID (0).");
+    }
+
+    /**
+     * Checks if an Area is correctly removed from the collection and if the bidirectional
+     */
+    @Test
+    void testRemoveAreaAndCheckBidirectionalLink() {
+        Address address = new Address("Test St", "1", "Test City", "10000", "GR");
+        Building building = new Building("Main Campus", address);
+        Area areaToRemove = new Area("Warehouse", building);
+        Area areaToKeep = new Area("Office", building);
+
+        building.addArea(areaToRemove);
+        building.addArea(areaToKeep);
+
+        assertEquals(2, building.getAreas().size());
+        assertEquals(building, areaToRemove.getBuilding());
+
+        building.removeArea(areaToRemove);
+
+        assertEquals(1, building.getAreas().size(), "Building must contain only one area after removal.");
+        assertFalse(building.getAreas().contains(areaToRemove), "The removed Area should not be in the collection.");
+
+        assertNull(areaToRemove.getBuilding(), "The back-reference in the removed Area must be set to null.");
+    }
+
+    /**
+     * Checks equals() and hashCode() consistency
+     */
+    @Test
+    void testBuildingEqualityAndHashCode() {
+        Address address = new Address("A", "1", "C", "1", "G");
+        Building b1 = new Building("Main", address); // ID = 0
+        Building b2 = new Building("Main", address); // ID = 0
+        Building b3 = new Building("Aux", address);
+
+        b1.setBuildingId(10);
+        b3.setBuildingId(10);
+
+        assertEquals(b1, b3, "Buildings with the same ID must be equal (Persistence Identity).");
+        assertNotEquals(b1, b2, "Buildings with different IDs/references must not be equal.");
+
+        assertEquals(b1.hashCode(), b3.hashCode(), "Buildings with same ID must have the same hash code.");
+
+        assertNotEquals(b1, null, "Object must not equal null.");
+        assertNotEquals(b1, new Object(), "Object must not equal other classes.");
     }
 }

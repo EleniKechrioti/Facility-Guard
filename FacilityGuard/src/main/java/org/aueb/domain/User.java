@@ -323,7 +323,10 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userId == user.userId;
+        if (userId != 0 && user.userId != 0) {
+            return userId == user.userId;
+        }
+        return Objects.equals(email, user.email);
     }
 
     @Override
