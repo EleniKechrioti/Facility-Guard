@@ -1,0 +1,166 @@
+Index: FacilityGuard/src/test/java/org/aueb/persistence/Initializer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.aueb.persistence;\r\n\r\nimport jakarta.persistence.EntityManager;\r\nimport jakarta.persistence.EntityTransaction;\r\nimport org.aueb.domain.*;\r\nimport org.aueb.util.enumerations.UserType;\r\n\r\npublic class Initializer {\r\n\r\n    private EntityManager em;\r\n\r\n    public Initializer() {\r\n        em = JPAUtil.getCurrentEntityManager();\r\n    }\r\n\r\n    private void eraseData() {\r\n        EntityTransaction tx = em.getTransaction();\r\n        tx.begin();\r\n\r\n        em.createNativeQuery(\"delete from users\").executeUpdate();\r\n\r\n        tx.commit();\r\n    }\r\n\r\n    public void prepareData() {\r\n\r\n        eraseData();\r\n\r\n        EntityTransaction tx = em.getTransaction();\r\n        tx.begin();\r\n\r\n        User user = new User(\"userTest\", \"password\", \"John\", \"Doe\", \"johndoe@email.com\", UserType.Administrator);\r\n        em.persist(user);\r\n\r\n        tx.commit();\r\n\r\n        em.close();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FacilityGuard/src/test/java/org/aueb/persistence/Initializer.java b/FacilityGuard/src/test/java/org/aueb/persistence/Initializer.java
+--- a/FacilityGuard/src/test/java/org/aueb/persistence/Initializer.java	(revision e9a5c6f8939fc8c7c2aa721318e940c5b9a1a178)
++++ b/FacilityGuard/src/test/java/org/aueb/persistence/Initializer.java	(date 1764017916764)
+@@ -3,7 +3,11 @@
+ import jakarta.persistence.EntityManager;
+ import jakarta.persistence.EntityTransaction;
+ import org.aueb.domain.*;
++import org.aueb.util.enumerations.AccessType;
++import org.aueb.util.enumerations.PermissionType;
+ import org.aueb.util.enumerations.UserType;
++import java.util.Date;
++import java.util.Calendar;
+ 
+ public class Initializer {
+ 
+@@ -13,10 +17,18 @@
+         em = JPAUtil.getCurrentEntityManager();
+     }
+ 
++    public Initializer(EntityManager em) {
++        this.em = em;
++    }
++
+     private void eraseData() {
+         EntityTransaction tx = em.getTransaction();
+         tx.begin();
+-
++        //em.createQuery("delete from AccessCard").executeUpdate();
++        em.createQuery("delete from AccessLog").executeUpdate();
++        em.createQuery("delete from Permission").executeUpdate();
++        //em.createQuery("delete from RegistrationRequest").executeUpdate();
++        //em.createQuery("delete from AccessCard").executeUpdate();
+         em.createNativeQuery("delete from users").executeUpdate();
+ 
+         tx.commit();
+@@ -28,9 +40,32 @@
+ 
+         EntityTransaction tx = em.getTransaction();
+         tx.begin();
++        User admin = new User("admin.auth", "pass", "Adin", "Smith", "admin@auth.com", UserType.Administrator);
++
++        User employee = new User("userTest", "password", "John", "Doe", "johndoe@email.com", UserType.Employee);
+ 
+-        User user = new User("userTest", "password", "John", "Doe", "johndoe@email.com", UserType.Administrator);
+-        em.persist(user);
++        RegistrationRequest req_emp = employee.submitRegistrationRequest();
++        RegistrationRequest req_admin = admin.submitRegistrationRequest();
++
++        Calendar cal = Calendar.getInstance();
++        cal.add(Calendar.YEAR, 1);
++        Date expirationDate = cal.getTime();
++        AccessCard card = new AccessCard(expirationDate);
++
++        Permission p1 = new Permission(PermissionType.AccessGranted, card);
++        Permission p2 = new Permission(PermissionType.AccessDenied, card);
++
++        AccessLog log1 = new AccessLog(PermissionType.AccessGranted, AccessType.In, card);
++
++        em.persist(employee);
++        em.persist(admin);
++        admin.setAccessCard(card);
++        em.persist(card);
++        em.persist(p1);
++        em.persist(p2);
++        em.persist(log1);
++        em.persist(req_emp);
++        em.persist(req_admin);
+ 
+         tx.commit();
+ 
+Index: FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.aueb.persistence;\r\n\r\nimport jakarta.persistence.EntityManager;\r\nimport org.junit.jupiter.api.AfterEach;\r\nimport org.junit.jupiter.api.BeforeEach;\r\n\r\npublic class JPATest {\r\n    EntityManager em;\r\n\r\n    @BeforeEach\r\n    public void setup() {\r\n\r\n        Initializer initializer = new Initializer();\r\n        initializer.prepareData();\r\n\r\n        em = JPAUtil.getCurrentEntityManager();\r\n\r\n    }\r\n\r\n    @AfterEach\r\n    public void tearDown() {\r\n        em.close();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java b/FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java
+--- a/FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java	(revision e9a5c6f8939fc8c7c2aa721318e940c5b9a1a178)
++++ b/FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java	(date 1764016613114)
+@@ -6,6 +6,7 @@
+ 
+ public class JPATest {
+     EntityManager em;
++    Initializer initializer;
+ 
+     @BeforeEach
+     public void setup() {
+@@ -19,6 +20,7 @@
+ 
+     @AfterEach
+     public void tearDown() {
++
+         em.close();
+     }
+ }
+Index: FacilityGuard/src/test/java/org/aueb/persistence/JPAUtilTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.aueb.persistence;\r\n\r\nimport jakarta.persistence.EntityManager;\r\nimport org.junit.Test;\r\n\r\nimport static org.junit.Assert.assertNotNull;\r\n\r\npublic class JPAUtilTest {\r\n\r\n    @Test\r\n    public void testGetCurrentEntityManager(){\r\n        EntityManager em = JPAUtil.getCurrentEntityManager();\r\n        assertNotNull(em);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FacilityGuard/src/test/java/org/aueb/persistence/JPAUtilTest.java b/FacilityGuard/src/test/java/org/aueb/persistence/JPAUtilTest.java
+--- a/FacilityGuard/src/test/java/org/aueb/persistence/JPAUtilTest.java	(revision e9a5c6f8939fc8c7c2aa721318e940c5b9a1a178)
++++ b/FacilityGuard/src/test/java/org/aueb/persistence/JPAUtilTest.java	(date 1764014832254)
+@@ -2,6 +2,7 @@
+ 
+ import jakarta.persistence.EntityManager;
+ import org.junit.Test;
++import org.junit.jupiter.api.BeforeEach;
+ 
+ import static org.junit.Assert.assertNotNull;
+ 
+@@ -13,4 +14,5 @@
+         assertNotNull(em);
+ 
+     }
++
+ }
+Index: FacilityGuard/src/test/java/org/aueb/persistence/UserJPATest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.aueb.persistence;\r\n\r\nimport org.aueb.domain.User;\r\nimport org.junit.jupiter.api.Test;\r\n\r\nimport java.util.List;\r\n\r\nimport static org.junit.jupiter.api.Assertions.assertEquals;\r\n\r\npublic class UserJPATest extends JPATest {\r\n\r\n    @Test\r\n    public void listAllUsers(){\r\n        List<User> result = em.createQuery(\"select u from User u\").getResultList();\r\n        assertEquals(1, result.size());\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FacilityGuard/src/test/java/org/aueb/persistence/UserJPATest.java b/FacilityGuard/src/test/java/org/aueb/persistence/UserJPATest.java
+--- a/FacilityGuard/src/test/java/org/aueb/persistence/UserJPATest.java	(revision e9a5c6f8939fc8c7c2aa721318e940c5b9a1a178)
++++ b/FacilityGuard/src/test/java/org/aueb/persistence/UserJPATest.java	(date 1763955893739)
+@@ -11,8 +11,8 @@
+ 
+     @Test
+     public void listAllUsers(){
+-        List<User> result = em.createQuery("select u from User u").getResultList();
+-        assertEquals(1, result.size());
++        List<User> result = em.createQuery("SELECT u FROM User u").getResultList();
++        assertEquals(2, result.size());
+     }
+ 
+ 
+Index: FacilityGuard/src/main/java/org/aueb/domain/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.aueb.domain;\r\n\r\nimport jakarta.persistence.*;\r\nimport org.aueb.util.enumerations.ActivityStatus;\r\nimport org.aueb.util.PasswordEncoder;\r\nimport org.aueb.util.enumerations.UserType;\r\n\r\nimport java.util.Date;\r\nimport java.util.HashSet;\r\nimport java.util.Set;\r\nimport java.util.Objects;\r\n\r\n@Entity\r\n@Table(name = \"users\")\r\npublic class User {\r\n\r\n    /**\r\n     * The unique identifier for the user.\r\n     */\r\n    @Id\r\n    @Column(name=\"id\")\r\n    @GeneratedValue(strategy = GenerationType.AUTO)\r\n    private int userId;\r\n\r\n    /**\r\n     * The unique username used for system login.\r\n     */\r\n    @Column(nullable = false, unique = true)\r\n    private String username;\r\n\r\n    /**\r\n     * The user's password.\r\n     */\r\n    @Column(nullable = false, length = 60)\r\n    private String password;\r\n\r\n    /** The user's first name. */\r\n    @Column(name = \"first_name\", length = 50, nullable = false)\r\n    private String firstName;\r\n\r\n    /** The user's last name. */\r\n    @Column(name = \"last_name\", length = 50, nullable = false)\r\n    private String lastName;\r\n\r\n    /** The user's email. */\r\n    @Column(name = \"email\", length = 50, nullable = false)\r\n    private String email;\r\n\r\n    /**\r\n     * The user's type\r\n     */\r\n    @Enumerated(EnumType.STRING)\r\n    @Column(name = \"user_type\", nullable = false)\r\n    private UserType userType;\r\n\r\n    /**\r\n     * The user's access card\r\n     */\r\n    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)\r\n    @JoinColumn(name = \"card_fk\", referencedColumnName = \"card_id\")\r\n    private AccessCard accessCard;\r\n\r\n    /**\r\n     * The set of all registration requests made by this user\r\n     */\r\n    @OneToMany(mappedBy = \"user\", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)\r\n    private Set<RegistrationRequest> registrationRequests = new HashSet<>();\r\n\r\n    /**\r\n     * Default Constructor\r\n     */\r\n    public User() {}\r\n\r\n    // Parameterized Constructor\r\n    public User(String username, String password, String firstName, String lastName, String email, UserType userType){\r\n        this.username = username;\r\n        this.password = password;\r\n        this.firstName = firstName;\r\n        this.lastName = lastName;\r\n        this.email = email;\r\n        this.userType = userType;\r\n    }\r\n\r\n    // ------------------- Business Methods -------------------\r\n\r\n    /**\r\n     * Creates and submits a new registration request\r\n     * @throws IllegalStateException if the user already has an active request (status=ACTIVE).\r\n     */\r\n    public RegistrationRequest submitRegistrationRequest() {\r\n        boolean hasActiveRequest = this.registrationRequests.stream()\r\n                .anyMatch(r -> r.getStatus() == ActivityStatus.Active);\r\n\r\n        if (hasActiveRequest) {\r\n            throw new IllegalStateException(\"User \" + this.username + \" already has an active registration request. Cannot submit a new one.\");\r\n        }\r\n\r\n        RegistrationRequest newRequest = new RegistrationRequest();\r\n\r\n        addRegistrationRequest(newRequest);\r\n\r\n        return newRequest;\r\n    }\r\n\r\n    /**\r\n     * Creates a new AccessCard for the user, if there is an APPROVED request.\r\n     * @param expirationDate the expiration date of the card.\r\n     * @return the created access card.\r\n     * @throws IllegalStateException if they don't fulfill the limitations.\r\n     */\r\n    public AccessCard issueAccessCard(Date expirationDate) {\r\n        if (this.accessCard != null) {\r\n            throw new IllegalStateException(\"User already has an access card.\");\r\n        }\r\n\r\n        RegistrationRequest activeApprovedRequest = this.registrationRequests.stream()\r\n                .filter(r -> r.getStatus() == ActivityStatus.Active && r.isApproved())\r\n                .findFirst()\r\n                .orElseThrow(() -> new IllegalStateException(\"Cannot issue card: No ACTIVE and APPROVED registration request found.\"));\r\n\r\n        AccessCard newCard = new AccessCard(expirationDate);\r\n\r\n        setAccessCard(newCard);\r\n        return newCard;\r\n    }\r\n\r\n    public Set<RegistrationRequest> getRegistrationRequests() { return registrationRequests; }\r\n\r\n    /**\r\n     * Adds a RegistrationRequest to the collection\r\n     * @param request The RegistrationRequest to add\r\n     */\r\n    public void addRegistrationRequest(RegistrationRequest request) {\r\n        registrationRequests.add(request);\r\n        request.setUser(this);\r\n    }\r\n\r\n    /**\r\n     * Returns the access card of the user\r\n     * @return the access card\r\n     */\r\n    public AccessCard getAccessCard() { return accessCard; }\r\n\r\n\r\n    /**\r\n     * Assigns an AccessCard to the user\r\n     * If the user already has a card, it will be replaced.\r\n     * @param accessCard The single AccessCard to assign.\r\n     */\r\n    public void setAccessCard(AccessCard accessCard) {\r\n        this.accessCard = accessCard;\r\n        if (accessCard != null && accessCard.getUser() != this) {\r\n            accessCard.setUser(this);\r\n        }\r\n    }\r\n\r\n\r\n    /**\r\n     * Removes the currently assigned AccessCard from the user.\r\n     */\r\n    public void removeAccessCard() {\r\n        if (this.accessCard != null) {\r\n            this.accessCard.setUser(null);\r\n            this.accessCard = null;\r\n        }\r\n    }\r\n\r\n\r\n\r\n    /**\r\n     * Checks if the user has Administrator privileges.\r\n     * @return true if the userType is Administrator.\r\n     */\r\n    public boolean isAdmin() {\r\n        return this.userType == UserType.Administrator;\r\n    }\r\n\r\n    /**\r\n     * Checks if the user is an Employee.\r\n     * @return true if the userType is Employee.\r\n     */\r\n    public boolean isEmployee() {\r\n        return this.userType == UserType.Employee;\r\n    }\r\n\r\n    /**\r\n     * Checks if the user is a visitor.\r\n     * @return true if the userType is Visitor.\r\n     */\r\n    public boolean isVisitor() {\r\n        return this.userType == UserType.Visitor;\r\n    }\r\n\r\n\r\n    //---------- Getters and Setters --------------------\r\n\r\n    /**\r\n     * Returns the stored password hash.\r\n     * @return the stored password hash string\r\n     */\r\n    public String getPassword() {\r\n        return password;\r\n    }\r\n\r\n    /**\r\n     * Sets the password\r\n     * @param password the password\r\n     */\r\n    public void setPassword(String password) {\r\n        this.password = PasswordEncoder.encode(password);\r\n    }\r\n\r\n    /**\r\n     * Checks if the provided password matches the stored hashed password.\r\n     * This comparison is performed safely by the BCrypt algorithm.\r\n     * @param password The clear-text password to check.\r\n     * @return true if the passwords match, false otherwise.\r\n     */\r\n    public boolean checkPassword(String password) {\r\n        if (this.password == null) {\r\n            return false; // Cannot match against a null hash\r\n        }\r\n        return PasswordEncoder.matches(password, this.password);\r\n    }\r\n\r\n    /**\r\n     * Returns the email\r\n     * @return the email\r\n     */\r\n    public String getEmail() {\r\n        return email;\r\n    }\r\n\r\n    /**\r\n     * Sets the email\r\n     * @param email the email\r\n     */\r\n    public void setEmail(String email) {\r\n        this.email = email;\r\n    }\r\n\r\n    /**\r\n     * Returns the first name\r\n     * @return the first name\r\n     */\r\n    public String getFirstName() {\r\n        return firstName;\r\n    }\r\n\r\n    /**\r\n     * Sets the first name\r\n     * @param firstName the first name\r\n     */\r\n    public void setFirstName(String firstName) {\r\n        this.firstName = firstName;\r\n    }\r\n\r\n    /**\r\n     * Returns the last name\r\n     * @return the last name\r\n     */\r\n    public String getLastName() {\r\n        return lastName;\r\n    }\r\n\r\n    /**\r\n     * Sets the last name\r\n     * @param lastName the last name\r\n     */\r\n    public void setLastName(String lastName) {\r\n        this.lastName = lastName;\r\n    }\r\n\r\n    /**\r\n     * Returns the User type\r\n     * @return the user type\r\n     */\r\n    public UserType getUserType() {\r\n        return userType;\r\n    }\r\n\r\n    /**\r\n     * Sets the User type\r\n     * @param userType the user type\r\n     */\r\n    public void setUserType(UserType userType) {\r\n        this.userType = userType;\r\n    }\r\n\r\n\r\n    /**\r\n     * Equality depends on all fields of the address\r\n     * @param o the other object\r\n     * @return  {@code true} if the objects are equal\r\n     */\r\n    @Override\r\n    public boolean equals(Object o) {\r\n        if (this == o) return true;\r\n        if (o == null || getClass() != o.getClass()) return false;\r\n        User user = (User) o;\r\n        return userId == user.userId;\r\n    }\r\n\r\n    @Override\r\n    public int hashCode() {\r\n        return Objects.hash(userId);\r\n    }\r\n\r\n    /**\r\n     * Returns a string representation of the User object\r\n     * @return a string representation of the object\r\n     */\r\n    @Override\r\n    public String toString() {\r\n        return \"User{\" +\r\n                \"userId=\" + userId +\r\n                \", username='\" + username + '\\'' +\r\n                \", userType=\" + userType +\r\n                '}';\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FacilityGuard/src/main/java/org/aueb/domain/User.java b/FacilityGuard/src/main/java/org/aueb/domain/User.java
+--- a/FacilityGuard/src/main/java/org/aueb/domain/User.java	(revision e9a5c6f8939fc8c7c2aa721318e940c5b9a1a178)
++++ b/FacilityGuard/src/main/java/org/aueb/domain/User.java	(date 1763959570929)
+@@ -223,6 +223,7 @@
+         return PasswordEncoder.matches(password, this.password);
+     }
+ 
++    public String getUsername() {return username;}
+     /**
+      * Returns the email
+      * @return the email
