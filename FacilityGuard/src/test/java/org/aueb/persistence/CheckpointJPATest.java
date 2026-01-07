@@ -13,15 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CheckpointJPATest {
 
-    @BeforeEach
-    void setup() {
-        new Initializer().prepareData();
-    }
 
     @Test
     void testCheckpointPersistence() {
 
-        EntityManager em = JPAUtil.getCurrentEntityManager();
+        EntityManager em = null;//JPAUtil.getCurrentEntityManager();
         em.getTransaction().begin();
 
         /** Create Building + Area   */
@@ -50,7 +46,7 @@ public class CheckpointJPATest {
         em.getTransaction().commit();
 
         /**  Validate Load   */
-        EntityManager em2 = JPAUtil.getCurrentEntityManager();
+        EntityManager em2 = null;//JPAUtil.getCurrentEntityManager();
         Checkpoint loaded = em2.find(Checkpoint.class, cp.getCheckpointId());
 
         assertNotNull(loaded);

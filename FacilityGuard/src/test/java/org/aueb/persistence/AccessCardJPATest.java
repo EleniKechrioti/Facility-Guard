@@ -2,6 +2,7 @@ package org.aueb.persistence;
 
 import jakarta.persistence.EntityManager;
 import org.aueb.domain.*;
+import org.aueb.util.Address;
 import org.aueb.util.enumerations.AccessType;
 import org.aueb.util.enumerations.ActivityStatus;
 import org.aueb.util.enumerations.PermissionType;
@@ -32,7 +33,21 @@ public class AccessCardJPATest extends JPATest{
     @Test
     void testCascadePersistPermissions() {
 
-        Building b = Initializer.getPersistedBuilding();
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building b = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", b);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        b.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
         Building building = em.find(Building.class, b.getBuildingId());
         Area area = building.getAreas().iterator().next();
 
@@ -108,7 +123,22 @@ public class AccessCardJPATest extends JPATest{
         AccessCard card = new AccessCard(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)));
         user.setAccessCard(card);
 
-        Area areaToPersist = new Area("Perm Zone Alpha", this.testBuilding);
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building b = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", b);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        b.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
+        Area areaToPersist = new Area("Perm Zone Alpha", b);
 
         em.getTransaction().begin();
         em.persist(user);
@@ -150,7 +180,22 @@ public class AccessCardJPATest extends JPATest{
         AccessCard card = new AccessCard(date);
         initialUser.setAccessCard(card);
 
-        Area areaToPersist = new Area("Lobby Area", this.testBuilding);
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building b = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", b);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        b.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp);
+        Area areaToPersist = new Area("Lobby Area", b);
         Checkpoint cp1 = new Checkpoint("Entry Gate");
 
         cp1.setArea(areaToPersist);
