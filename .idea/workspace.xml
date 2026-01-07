@@ -4,252 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="108fc0ca-555f-4a05-a2e3-0ebee990fe1d" name="Changes" comment="new additions" />
+    <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;DimitrisBls&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/softeng-aueb/team01-ft-2025-26.git&quot;,
-    &quot;accountId&quot;: &quot;6b6cab55-2dcb-45ed-b976-4e13c97da421&quot;
-  }
-}</component>
-  <component name="MavenRunner">
-    <option name="jreName" value="17" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
-}</component>
-  <component name="ProjectId" id="35cgLwFIy2NCu6x7ka99LCpNNRS" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="37wEl0f1PT7DmKZkWvL4KQXlKdc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AccessCardJPATest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AccessCardJPATest.fetchAccessCardWithPermissionAccessLogByUsername.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AccessCardTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AreaTest.checkAreaEqualityBeforePersistence.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.JPAUtilTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.PermissionTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.RegTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.RegistrationRequestJPATest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserJPATest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.domain in FacilityGuard.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.persistence in FacilityGuard.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.FacilityGuard [compile].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
-  <component name="RunAnythingCache">
-    <option name="myCommands">
-      <command value="mvn compile" />
-    </option>
-  </component>
-  <component name="RunManager" selected="JUnit.AreaTest.checkAreaEqualityBeforePersistence">
-    <configuration name="AreaTest.checkAreaEqualityBeforePersistence" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.domain.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.domain" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.domain.AreaTest" />
-      <option name="METHOD_NAME" value="checkAreaEqualityBeforePersistence" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RegTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.persistence.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.persistence" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.RegTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RegistrationRequestJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.persistence.Initializer" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.persistence" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.RegistrationRequestJPATest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="domain in FacilityGuard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/domain" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="persistence in FacilityGuard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JUnit.AreaTest.checkAreaEqualityBeforePersistence" />
-        <item itemvalue="JUnit.persistence in FacilityGuard" />
-        <item itemvalue="JUnit.domain in FacilityGuard" />
-        <item itemvalue="JUnit.RegTest" />
-        <item itemvalue="JUnit.RegistrationRequestJPATest" />
-      </list>
-    </recent_temporary>
-  </component>
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="108fc0ca-555f-4a05-a2e3-0ebee990fe1d" name="Changes" comment="" />
-      <created>1763414721516</created>
+      <changelist id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="" />
+      <created>1767805882604</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1763414721516</updated>
+      <updated>1767805882604</updated>
     </task>
-    <task id="LOCAL-00001" summary="new additions">
-      <option name="closed" value="true" />
-      <created>1763429009905</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1763429009905</updated>
-    </task>
-    <task id="LOCAL-00002" summary="edited User class and Initializer">
-      <option name="closed" value="true" />
-      <created>1763683533862</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1763683533862</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Domain Exception added">
-      <option name="closed" value="true" />
-      <created>1763683833009</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1763683833009</updated>
-    </task>
-    <task id="LOCAL-00004" summary="new classes added">
-      <option name="closed" value="true" />
-      <created>1763764409870</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1763764409870</updated>
-    </task>
-    <task id="LOCAL-00005" summary="new classes added">
-      <option name="closed" value="true" />
-      <created>1763858968476</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1763858968476</updated>
-    </task>
-    <task id="LOCAL-00006" summary=" added">
-      <option name="closed" value="true" />
-      <created>1764018916891</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1764018916891</updated>
-    </task>
-    <task id="LOCAL-00007" summary=" added">
-      <option name="closed" value="true" />
-      <created>1764018978955</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1764018978955</updated>
-    </task>
-    <task id="LOCAL-00008" summary="new additions">
-      <option name="closed" value="true" />
-      <created>1764193701374</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1764193701374</updated>
-    </task>
-    <task id="LOCAL-00009" summary="new additions">
-      <option name="closed" value="true" />
-      <created>1764194558283</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1764194558283</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="edited User class and Initializer" />
-    <MESSAGE value="Domain Exception added" />
-    <MESSAGE value="new classes added" />
-    <MESSAGE value=" added" />
-    <MESSAGE value="new additions" />
-    <option name="LAST_COMMIT_MESSAGE" value="new additions" />
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/team01_ft_2025_26$All_in_FacilityGuard.ic" NAME="All in FacilityGuard Coverage Results" MODIFIED="1767711038225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
