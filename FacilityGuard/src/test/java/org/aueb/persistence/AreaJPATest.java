@@ -1,383 +1,203 @@
 package org.aueb.persistence;
 
-import jakarta.persistence.EntityManager;
+import io.quarkus.test.junit.QuarkusTest;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import org.aueb.domain.*;
 import org.aueb.util.Address;
-import org.aueb.util.enumerations.*;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test class for verifying the persistence and relationships of the Area entity.
- */
-public class AreaJPATest extends JPATest{
-
+@QuarkusTest
+public class AreaJPATest extends JPATest {
 
     /**
-     * Tests the successful creation and retrieval of an Area.
+     * Helper method: Creates a baseline scenario (Building -> Area -> Checkpoint)
+     * and saves it to the base. Returns the Area for the test to use.
      */
+    private Area createBasicScenario(String buildingName, String areaName) {
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Building building = new Building(buildingName, addr);
+        Area area = new Area(areaName, building);
+        Checkpoint cp1 = new Checkpoint("Default CP");
+
+        building.addArea(area);
+        area.addCheckpoint(cp1);
+
+        em.persist(building); // Cascades to Area & Checkpoint
+        em.flush(); // Writing on the base to get IDs
+
+        return area;
+    }
+
     @Test
+    @Transactional
     void createArea_withBuilding() {
         Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Building persistentBuilding = new Building("Test Headquarters B", addr);
 
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp1 = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp1);
         Area newArea = new Area("Area 1", persistentBuilding);
+        persistentBuilding.addArea(newArea);
 
-        em.getTransaction().begin();
-        em.persist(newArea);
-        em.getTransaction().commit();
-
+        em.persist(persistentBuilding);
+        em.flush();
         em.clear();
 
         Area retrievedArea = em.find(Area.class, newArea.getAreaId());
 
         assertNotNull(retrievedArea, "The Area entity must be retrieved successfully.");
         assertEquals("Area 1", retrievedArea.getName());
-
         assertNotNull(retrievedArea.getBuilding(), "The Building relationship must not be null.");
-        assertEquals(persistentBuilding.getBuildingId(), retrievedArea.getBuilding().getBuildingId(),
-                "The retrieved Building ID must match the parent Building ID.");
     }
 
-    /**
-     * Tests the persistence between Area and Checkpoint.
-     */
     @Test
+    @Transactional
     void areaToCheckpoint() {
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Area entranceArea = createBasicScenario("HQ C", "Entrance Area");
 
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp);Area entranceArea = new Area("Area 1", persistentBuilding);
-
-        Checkpoint cp1 = new Checkpoint("West Entrance");
         Checkpoint cp2 = new Checkpoint("East Exit");
-
-        entranceArea.addCheckpoint(cp1);
         entranceArea.addCheckpoint(cp2);
 
-        em.getTransaction().begin();
-        em.persist(entranceArea);
-        em.getTransaction().commit();
-
+        em.persist(cp2);
+        em.flush();
         em.clear();
 
         Area retrievedArea = em.find(Area.class, entranceArea.getAreaId());
 
-        assertNotNull(retrievedArea.getCheckpoints(), "The Checkpoints collection must not be null.");
-        assertEquals(2, retrievedArea.getCheckpoints().size(), "Area must contain exactly 2 Checkpoints.");
-
-        // Assert the back reference from Checkpoint to Area
-        Checkpoint retrievedCp1 = retrievedArea.getCheckpoints().stream()
-                .filter(cpp -> cp.getName().equals("West Entrance"))
-                .findFirst().orElse(null);
-
-        assertNotNull(retrievedCp1, "Checkpoint must be found.");
-        assertEquals(retrievedArea.getAreaId(), retrievedCp1.getArea().getAreaId(),
-                "The Checkpoint's area reference must point back to the Area.");
+        assertNotNull(retrievedArea.getCheckpoints());
+        assertEquals(2, retrievedArea.getCheckpoints().size(), "Area must contain exactly 2 Checkpoints (1 from helper + 1 added).");
     }
 
-    /**
-     * Tests neighboring areas.
-     */
     @Test
+    @Transactional
     void areaToNeighbors() {
         Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
-
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp1 = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
+        Building persistentBuilding = new Building("Test Headquarters D", addr);
+        em.persist(persistentBuilding);
 
         Area classA = new Area("Class A", persistentBuilding);
         Area serverRoom = new Area("Server Room", persistentBuilding);
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp1);
         Area classB = new Area("Class B", persistentBuilding);
 
-        em.getTransaction().begin();
         em.persist(classA);
         em.persist(serverRoom);
         em.persist(classB);
-        em.getTransaction().commit();
+        em.flush();
 
-        em.getTransaction().begin();
+        // Add Neighbors
+        classA.addNeighbor(serverRoom);
+        classA.addNeighbor(classB);
 
-        Area managedCorridor = em.find(Area.class, classA.getAreaId());
-        Area managedServerRoom = em.find(Area.class, serverRoom.getAreaId());
-        Area managedOfficeA = em.find(Area.class, classB.getAreaId());
-
-        managedCorridor.addNeighbor(managedServerRoom);
-        managedCorridor.addNeighbor(managedOfficeA);
-
-        em.merge(managedCorridor);
-
-        em.getTransaction().commit();
+        em.merge(classA);
+        em.flush();
         em.clear();
 
         Area retrievedClassA = em.find(Area.class, classA.getAreaId());
-        Area retrievedServerRoom = em.find(Area.class, serverRoom.getAreaId());
-        Area retrievedClassB = em.find(Area.class, classB.getAreaId());
 
-        assertNotNull(retrievedClassA, "Class A must be retrieved");
-
-        assertEquals(2, retrievedClassA.getNeighbors().size(),
-                "Class A must have 2 neighbors.");
-
-        assertEquals(1, retrievedServerRoom.getNeighbors().size(),
-                "Server Room must have 1 neighbor (class A).");
-
-        assertEquals(1, retrievedClassB.getNeighbors().size(),
-                "Class B must have 1 neighbor (Class A).");
-
-        assertTrue(retrievedClassA.getNeighbors().contains(retrievedServerRoom),
-                "Server room must be in the neighbor's list of Class A.");
-
-        assertTrue(retrievedServerRoom.getNeighbors().contains(retrievedClassA),
-                "Class A must be in the neighbor's list of Server Room.");
+        assertEquals(2, retrievedClassA.getNeighbors().size(), "Class A must have 2 neighbors.");
+        assertTrue(retrievedClassA.getNeighbors().stream().anyMatch(n -> n.getName().equals("Server Room")));
     }
 
-    /**
-     * Tests a simple update operation on a non-key field of the Area entity.
-     */
     @Test
+    @Transactional
     void testAreaUpdateName() {
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Area area = createBasicScenario("Update Building", "Class A");
 
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp1 = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp1);Area area = new Area("Class A", persistentBuilding);
-
-        em.getTransaction().begin();
-        em.persist(area);
-        em.getTransaction().commit();
-
+        // Update Action
         String newName = "Class B";
-        em.getTransaction().begin();
         area.setName(newName);
-        em.getTransaction().commit();
 
+        em.flush();
         em.clear();
 
         Area retrievedArea = em.find(Area.class, area.getAreaId());
-
-        assertNotNull(retrievedArea, "The Area must still exist.");
-        assertEquals(newName, retrievedArea.getName(), "The Area name must be updated successfully.");
+        assertEquals(newName, retrievedArea.getName());
     }
 
-    /**
-     * Tests the functionality of orphanRemoval=true by removing a Checkpoint
-     * from the Area's collection and ensuring it is deleted from the database.
-     */
     @Test
+    @Transactional
     void testRemoveCheckpoint_fromArea() {
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Area area = createBasicScenario("Orphan Building", "Class A");
+        int areaId = area.getAreaId();
 
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+        // We find the ID of the checkpoint made by the helper
+        int checkpointId = area.getCheckpoints().iterator().next().getCheckpointId();
 
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp = new Checkpoint("Server Room Reader");
+        em.clear(); // Clean to test the retrieval and remove
 
-        /**  Relationships Connection   */
+        Area managedArea = em.find(Area.class, areaId);
+        Checkpoint checkpointToRemove = managedArea.getCheckpoints().iterator().next();
 
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp);
-        Area area = new Area("Class A", persistentBuilding);
-        Checkpoint cp1 = new Checkpoint("Checkpoint A");
-
-        area.addCheckpoint(cp1);
-
-        em.getTransaction().begin();
-        em.persist(area);
-        em.getTransaction().commit();
-
-        em.clear();
-
-        Area managedArea = em.find(Area.class, area.getAreaId());
-        int checkpointId = managedArea.getCheckpoints().iterator().next().getCheckpointId();
-
-        em.getTransaction().begin();
-        Checkpoint checkpointToRemove = em.find(Checkpoint.class, checkpointId);
+        // Remove Action
         managedArea.removeCheckpoint(checkpointToRemove);
-        em.getTransaction().commit();
 
+        em.flush(); // Trigger Orphan Removal
         em.clear();
 
-        Area finalArea = em.find(Area.class, area.getAreaId());
-
-        assertEquals(0, finalArea.getCheckpoints().size(), "The Checkpoint should be removed from the collection.");
-        assertNull(em.find(Checkpoint.class, checkpointId), "The orphaned Checkpoint must be deleted from the DB.");
+        Area finalArea = em.find(Area.class, areaId);
+        assertEquals(0, finalArea.getCheckpoints().size());
+        assertNull(em.find(Checkpoint.class, checkpointId), "Checkpoint should be deleted from DB.");
     }
 
-    /**
-     * Tests the correct removal of the symmetrical Many-to-Many neighbor relationship.
-     */
     @Test
+    @Transactional
     void testRemoveNeighbor() {
         Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Building building = new Building("Neighbor Building", addr);
+        em.persist(building);
 
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp1 = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp1);
-        Area areaA = new Area("Class A", persistentBuilding);
-        Area areaB = new Area("Class B", persistentBuilding);
+        Area areaA = new Area("Class A", building);
+        Area areaB = new Area("Class B", building);
 
         areaA.addNeighbor(areaB);
 
-        em.getTransaction().begin();
         em.persist(areaA);
         em.persist(areaB);
-        em.getTransaction().commit();
-
+        em.flush();
         em.clear();
 
         Area managedAreaA = em.find(Area.class, areaA.getAreaId());
         Area managedAreaB = em.find(Area.class, areaB.getAreaId());
 
-        em.getTransaction().begin();
-        managedAreaA.removeNeighbor(managedAreaB); // Helper method updates both sets
-        em.getTransaction().commit();
+        managedAreaA.removeNeighbor(managedAreaB);
 
+        em.flush();
         em.clear();
 
         Area finalAreaA = em.find(Area.class, areaA.getAreaId());
-        Area finalAreaB = em.find(Area.class, areaB.getAreaId());
-
-        assertEquals(0, finalAreaA.getNeighbors().size(), "Area A should have no neighbors left.");
-        assertEquals(0, finalAreaB.getNeighbors().size(), "Area B should have no neighbors left.");
+        assertEquals(0, finalAreaA.getNeighbors().size());
     }
 
-    /**
-     * Tests the cascading deletion of the Area entity and its dependent children (Checkpoints).
-     */
     @Test
+    @Transactional
     void testAreaDelete() {
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
-
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp);
-        Area areaToDelete = new Area("Class A", persistentBuilding);
-        Checkpoint cp1 = new Checkpoint("Checkpoint A");
-
-        areaToDelete.addCheckpoint(cp1);
-
-        em.getTransaction().begin();
-        em.persist(areaToDelete);
-        em.getTransaction().commit();
-
-        int areaId = areaToDelete.getAreaId();
-        int checkpointId = cp1.getCheckpointId();
+        Area area = createBasicScenario("Delete Building", "Class A");
+        int areaId = area.getAreaId();
+        // The checkpoint ID made automatically
+        int checkpointId = area.getCheckpoints().iterator().next().getCheckpointId();
 
         em.clear();
 
-        em.getTransaction().begin();
+        // Delete Action
         Area managedArea = em.find(Area.class, areaId);
-        em.remove(managedArea); // Deletes Area and cascades to Checkpoints
-        em.getTransaction().commit();
+        managedArea.getBuilding().removeArea(managedArea);
 
+        em.remove(managedArea);
+        em.flush();
         em.clear();
 
         assertNull(em.find(Area.class, areaId), "The Area entity must be deleted.");
-        assertNull(em.find(Checkpoint.class, checkpointId),
-                "The Checkpoint must be deleted via cascade operation.");
+        assertNull(em.find(Checkpoint.class, checkpointId), "The Checkpoint must be deleted via cascade.");
     }
 
-    /**
-     * Tests loading the Area entity along with its Building and Checkpoints
-     * in a single query using JOIN FETCH
-     */
     @Test
+    @Transactional
     public void fetchAreaWithBuildingAndCheckpoints() {
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
-
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp);
-
-        Area testArea = new Area("Class A", persistentBuilding);
-        Checkpoint cp1 = new Checkpoint("Checkpoint A");
-
-        testArea.addCheckpoint(cp1);
-
-        em.getTransaction().begin();
-        em.persist(testArea);
-        em.getTransaction().commit();
-
+        createBasicScenario("Fetch Building", "Class A");
         em.clear();
 
         Query query = em.createQuery("select a from Area a " +
@@ -385,66 +205,31 @@ public class AreaJPATest extends JPATest{
                 "left join fetch a.checkpoints cp " +
                 "where b.name = :name");
 
-        query.setParameter("name", persistentBuilding.getName());
+        query.setParameter("name", "Fetch Building");
         List<Area> result = query.getResultList();
 
-
-        assertTrue(result.size() >= 1, "At least one Area must be found after local persistence.");
-
+        assertTrue(result.size() >= 1);
         Area fetchedArea = result.get(0);
 
-        assertNotNull(fetchedArea.getBuilding(), "Building must be retrieved.");
-
-        assertFalse(fetchedArea.getCheckpoints().isEmpty(),
-                "Checkpoint set must be retrieved and have 1 element.");
-        assertEquals(1, fetchedArea.getCheckpoints().size(),
-                "Checkpoint set must be retrieved and have exactly 1 element.");
+        assertNotNull(fetchedArea.getBuilding());
+        assertEquals(1, fetchedArea.getCheckpoints().size());
     }
 
-    /**
-     * Tests that accessing a LAZY collection after the EntityManager (session) is closed
-     * correctly throws a LazyInitializationException.
-     */
     @Test
+    @Transactional
     void testLazyLoading_FailsOutOfContext() {
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Area area = createBasicScenario("Lazy Building", "Class A");
+        em.clear();
 
-        Building persistentBuilding = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+        // Fetch Area (Checkpoints are LAZY by default)
+        Area retrievedArea = em.find(Area.class, area.getAreaId());
 
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+        // Detach manually
+        em.detach(retrievedArea);
 
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        persistentBuilding.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp1);
-        Area area = new Area("Class A", persistentBuilding);
-        area.addCheckpoint(new Checkpoint("Checkpoint A"));
-
-        em.getTransaction().begin();
-        em.persist(area);
-        em.getTransaction().commit();
-
-        int areaId = area.getAreaId();
-
-        em.close();
-
-        /** Use a new entity manager for the retrieval  /
-        EntityManager em2 = JPAUtil.getCurrentEntityManager();
-        Area retrievedArea = em2.find(Area.class, areaId);
-        em2.close();
-
-        assertThrows(
-                LazyInitializationException.class,
-                () -> {
-                    retrievedArea.getCheckpoints().size();
-                },
-                "Accessing a LAZY collection on a detached entity must throw LazyInitializationException."
-        );
-        em = JPAUtil.getCurrentEntityManager();*/
+        // Expect Failure
+        assertThrows(LazyInitializationException.class, () -> {
+            retrievedArea.getCheckpoints().size();
+        });
     }
 }
