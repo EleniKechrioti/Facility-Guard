@@ -326,45 +326,4 @@ public class AreaJPATest extends JPATest{
         );
         em = JPAUtil.getCurrentEntityManager();
     }
-
-    /**
-     * Tests the persistence of the Permission entity and verifies that the Area
-     * correctly holds the inverse collection of permissions.
-     */
-    @Test
-    void testAreaToPermissions_InverseLink() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
-        Area targetArea = new Area("Class A", persistentBuilding);
-
-        User user = new User("user", "pass", "John", "Doe", "test@test.com", UserType.Employee);
-        AccessCard card = new AccessCard(new Date());
-        user.setAccessCard(card);
-
-        em.getTransaction().begin();
-        em.persist(user);
-        em.persist(targetArea);
-        em.getTransaction().commit();
-        em.clear();
-
-        AccessCard managedCard = em.find(AccessCard.class, card.getCardId());
-        Area managedArea = em.find(Area.class, targetArea.getAreaId());
-
-        Permission perm1 = new Permission(PermissionType.AccessGranted, managedCard, managedArea);
-
-        em.getTransaction().begin();
-        em.persist(perm1);
-        em.getTransaction().commit();
-        em.clear();
-
-        Area retrievedArea = em.find(Area.class, targetArea.getAreaId());
-
-        assertFalse(retrievedArea.getPermissions().isEmpty(),
-                "The inverse permissions collection must not be empty.");
-        assertEquals(1, retrievedArea.getPermissions().size(),
-                "Area must hold exactly 1 Permission record.");
-
-        Permission retrievedPerm = retrievedArea.getPermissions().iterator().next();
-        assertEquals(perm1.getPermissionId(), retrievedPerm.getPermissionId(),
-                "The retrieved Permission ID must match the original.");
-    }
 }

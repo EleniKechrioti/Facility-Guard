@@ -54,12 +54,6 @@ public class Area implements Serializable {
     )
     private Set<Area> neighbors = new HashSet<>();
 
-    /**
-     * The set of Permissions associated with this Area.
-     */
-    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Permission> permissions = new HashSet<>();
-
     /** Default constructor.*/
     public Area() {
     }
@@ -176,25 +170,6 @@ public class Area implements Serializable {
                 .filter(cp -> cp.getName().equalsIgnoreCase(name.trim()))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public Set<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public void addPermission(Permission permission) {
-        if (permission != null && !permissions.contains(permission)) {
-            permissions.add(permission);
-            if (permission.getArea() != this) {
-                permission.setArea(this);
-            }
-        }
-    }
-
-    public void removePermission(Permission permission) {
-        if (permission != null && permissions.remove(permission)) {
-            permission.setArea(null);
-        }
     }
 
     /**
