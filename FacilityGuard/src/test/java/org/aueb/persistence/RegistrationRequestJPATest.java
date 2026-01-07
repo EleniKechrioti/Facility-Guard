@@ -14,12 +14,6 @@ public class RegistrationRequestJPATest {
 
     private EntityManager em;
 
-    @BeforeEach
-    void setup() {
-        new Initializer().prepareData();
-        em = JPAUtil.getCurrentEntityManager();
-    }
-
     @Test
     void testPersistRegistrationRequest() {
 

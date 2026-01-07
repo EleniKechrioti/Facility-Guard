@@ -5,13 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/RegistrationRequestRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/UserResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AccessCardJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AccessCardJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AccessLogJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AccessLogJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AlertJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AlertJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AreaJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/AreaJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/CheckpointJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/CheckpointJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/Initializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/PermissionJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/PermissionJPATest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/RegistrationRequestJPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/RegistrationRequestJPATest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

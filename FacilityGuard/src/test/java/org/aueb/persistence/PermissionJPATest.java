@@ -1,6 +1,7 @@
 package org.aueb.persistence;
 
 import org.aueb.domain.*;
+import org.aueb.util.Address;
 import org.aueb.util.enumerations.PermissionType;
 import org.aueb.util.enumerations.UserType;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,22 @@ public class PermissionJPATest extends JPATest {
     }
 
     private AccessCard createPersistentParents() {
-        Area area = new Area("Test Zone Alpha", this.testBuilding);
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
+        Area area = new Area("Test Zone Alpha", persistentBuilding);
         User user = new User("PermsUser", "p", "P", "P", "p@p.com", UserType.Employee);
         AccessCard card = new AccessCard(new Date());
 

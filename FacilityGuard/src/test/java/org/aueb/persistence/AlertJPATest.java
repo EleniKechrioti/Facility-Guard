@@ -2,6 +2,7 @@ package org.aueb.persistence;
 
 import jakarta.persistence.EntityManager;
 import org.aueb.domain.*;
+import org.aueb.util.Address;
 import org.aueb.util.enumerations.AccessType;
 import org.aueb.util.enumerations.PermissionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,18 +16,25 @@ public class AlertJPATest {
 
     private EntityManager em;
 
-    @BeforeEach
-    void setup() {
-        new Initializer().prepareData();
-        em = JPAUtil.getCurrentEntityManager();
-    }
-
     @Test
     void testPersistAlertAndAccessLog() {
 
-        /** Load building & checkpoint from Initializer   */
-        Building b = Initializer.getPersistedBuilding();
-        Building building = em.find(Building.class, b.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
+        Building building = em.find(Building.class, persistentBuilding.getBuildingId());
         Area area = building.getAreas().iterator().next();
         Checkpoint cp = area.getCheckpoints().iterator().next();
 

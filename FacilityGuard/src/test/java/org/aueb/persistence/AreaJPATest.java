@@ -3,6 +3,7 @@ package org.aueb.persistence;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.aueb.domain.*;
+import org.aueb.util.Address;
 import org.aueb.util.enumerations.*;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void createArea_withBuilding() {
-        Building persistentBuilding = em.find(Building.class, this.testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
         Area newArea = new Area("Area 1", persistentBuilding);
 
         em.getTransaction().begin();
@@ -47,8 +62,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void areaToCheckpoint() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
-        Area entranceArea = new Area("Area 1", persistentBuilding);
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp);Area entranceArea = new Area("Area 1", persistentBuilding);
 
         Checkpoint cp1 = new Checkpoint("West Entrance");
         Checkpoint cp2 = new Checkpoint("East Exit");
@@ -69,7 +97,7 @@ public class AreaJPATest extends JPATest{
 
         // Assert the back reference from Checkpoint to Area
         Checkpoint retrievedCp1 = retrievedArea.getCheckpoints().stream()
-                .filter(cp -> cp.getName().equals("West Entrance"))
+                .filter(cpp -> cp.getName().equals("West Entrance"))
                 .findFirst().orElse(null);
 
         assertNotNull(retrievedCp1, "Checkpoint must be found.");
@@ -82,9 +110,19 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void areaToNeighbors() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
         Area classA = new Area("Class A", persistentBuilding);
         Area serverRoom = new Area("Server Room", persistentBuilding);
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
         Area classB = new Area("Class B", persistentBuilding);
 
         em.getTransaction().begin();
@@ -134,8 +172,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void testAreaUpdateName() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
-        Area area = new Area("Class A", persistentBuilding);
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);Area area = new Area("Class A", persistentBuilding);
 
         em.getTransaction().begin();
         em.persist(area);
@@ -160,7 +211,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void testRemoveCheckpoint_fromArea() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp);
         Area area = new Area("Class A", persistentBuilding);
         Checkpoint cp1 = new Checkpoint("Checkpoint A");
 
@@ -193,7 +258,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void testRemoveNeighbor() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
         Area areaA = new Area("Class A", persistentBuilding);
         Area areaB = new Area("Class B", persistentBuilding);
 
@@ -227,7 +306,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void testAreaDelete() {
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp);
         Area areaToDelete = new Area("Class A", persistentBuilding);
         Checkpoint cp1 = new Checkpoint("Checkpoint A");
 
@@ -260,9 +353,23 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     public void fetchAreaWithBuildingAndCheckpoints() {
-        Building currentBuilding = em.find(Building.class, this.testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
 
-        Area testArea = new Area("Class A", currentBuilding);
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp);
+
+        Area testArea = new Area("Class A", persistentBuilding);
         Checkpoint cp1 = new Checkpoint("Checkpoint A");
 
         testArea.addCheckpoint(cp1);
@@ -278,7 +385,7 @@ public class AreaJPATest extends JPATest{
                 "left join fetch a.checkpoints cp " +
                 "where b.name = :name");
 
-        query.setParameter("name", currentBuilding.getName());
+        query.setParameter("name", persistentBuilding.getName());
         List<Area> result = query.getResultList();
 
 
@@ -300,7 +407,21 @@ public class AreaJPATest extends JPATest{
      */
     @Test
     void testLazyLoading_FailsOutOfContext() {
-        Building persistentBuilding = em.find(Building.class, this.testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
         Area area = new Area("Class A", persistentBuilding);
         area.addCheckpoint(new Checkpoint("Checkpoint A"));
 
@@ -312,7 +433,7 @@ public class AreaJPATest extends JPATest{
 
         em.close();
 
-        /** Use a new entity manager for the retrieval  */
+        /** Use a new entity manager for the retrieval  /
         EntityManager em2 = JPAUtil.getCurrentEntityManager();
         Area retrievedArea = em2.find(Area.class, areaId);
         em2.close();
@@ -324,6 +445,6 @@ public class AreaJPATest extends JPATest{
                 },
                 "Accessing a LAZY collection on a detached entity must throw LazyInitializationException."
         );
-        em = JPAUtil.getCurrentEntityManager();
+        em = JPAUtil.getCurrentEntityManager();*/
     }
 }

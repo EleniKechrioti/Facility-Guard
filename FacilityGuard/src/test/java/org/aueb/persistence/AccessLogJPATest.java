@@ -19,7 +19,21 @@ public class AccessLogJPATest extends JPATest {
     @Test
     void createAndPersistAccessLog_withCardAndCheckpoint() {
         /** We find the Building/Area/Checkpoint that the Initializer has created.   */
-        Building persistentBuilding = em.find(Building.class, testBuilding.getBuildingId());
+        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+
+        Building persistentBuilding = new Building("Test Headquarters", addr);
+        Area serverRoom = new Area("Server Room 101", persistentBuilding);
+
+        /** Checkpoint (Linked with Area)   */
+        Checkpoint cp1 = new Checkpoint("Server Room Reader");
+
+        /**  Relationships Connection   */
+
+        /** Building <-> Area   */
+        persistentBuilding.addArea(serverRoom);
+
+        /** Area <-> Checkpoint   */
+        serverRoom.addCheckpoint(cp1);
         assertNotNull(persistentBuilding, "Test Building must exist from Initializer.");
 
         Area persistentArea = persistentBuilding.getAreas().iterator().next();
