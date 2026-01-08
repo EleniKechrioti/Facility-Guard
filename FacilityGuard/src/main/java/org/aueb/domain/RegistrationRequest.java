@@ -3,7 +3,6 @@ package org.aueb.domain;
 import jakarta.persistence.*;
 import org.aueb.util.enumerations.ActivityStatus;
 import org.aueb.util.enumerations.UserType;
-
 import java.util.Date;
 import java.util.Objects;
 

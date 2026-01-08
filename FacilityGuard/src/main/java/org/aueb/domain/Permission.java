@@ -100,9 +100,7 @@ public class Permission {
      */
     public void setArea(Area area) {
         this.area = area;
-        if (area != null && !area.getPermissions().contains(this)) {
-            area.addPermission(this);
-        }
+
     }
 
     // ------------------- Equals and HashCode -------------------

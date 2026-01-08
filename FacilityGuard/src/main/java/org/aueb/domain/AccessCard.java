@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
+
 @Entity
 @Table(name = "access_card")
 public class AccessCard {

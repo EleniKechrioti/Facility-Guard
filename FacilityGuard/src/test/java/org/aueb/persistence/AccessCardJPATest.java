@@ -1,6 +1,7 @@
 package org.aueb.persistence;
 
-import jakarta.persistence.EntityManager;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.transaction.Transactional;
 import org.aueb.domain.*;
 import org.aueb.util.Address;
 import org.aueb.util.enumerations.AccessType;
@@ -14,16 +15,18 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AccessCardJPATest extends JPATest{
+@QuarkusTest
+public class AccessCardJPATest extends JPATest {
 
     @Test
+    @Transactional
     void testPersistAccessCard() {
         AccessCard card = new AccessCard(new Date());
 
-        em.getTransaction().begin();
+        // Αντικατάσταση του begin/commit με persist/flush
         em.persist(card);
-        em.getTransaction().commit();
-        em.clear();
+        em.flush(); // Στέλνει την SQL στη βάση
+        em.clear(); // Καθαρίζει την cache (detaches objects)
 
         AccessCard saved = em.find(AccessCard.class, card.getCardId());
         assertNotNull(saved);
@@ -31,58 +34,72 @@ public class AccessCardJPATest extends JPATest{
     }
 
     @Test
+    @Transactional
     void testCascadePersistPermissions() {
-
+        // Δημιουργία και persist των Dependencies πρώτα
         Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
-
         Building b = new Building("Test Headquarters", addr);
         Area serverRoom = new Area("Server Room 101", b);
-
-        /** Checkpoint (Linked with Area)   */
         Checkpoint cp1 = new Checkpoint("Server Room Reader");
 
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
+        // Σύνδεση σχέσεων
         b.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
         serverRoom.addCheckpoint(cp1);
-        Building building = em.find(Building.class, b.getBuildingId());
-        Area area = building.getAreas().iterator().next();
+
+        // ΠΡΟΣΟΧΗ: Πρέπει να τα σώσουμε για να πάρουν IDs
+        em.persist(b);
+        em.persist(serverRoom);
+        em.persist(cp1);
+        em.flush();
 
         AccessCard card = new AccessCard(new Date());
 
-        Permission p1 = new Permission(PermissionType.AccessGranted, card, area);
-        Permission p2 = new Permission(PermissionType.AccessDenied, card, area);
+        // Φτιάχνουμε τα permissions
+        Permission p1 = new Permission(PermissionType.AccessGranted, card, serverRoom);
+        Permission p2 = new Permission(PermissionType.AccessDenied, card, serverRoom); // Duplicate logic test
 
-        em.getTransaction().begin();
-        em.persist(card); // cascade persists p1 & p2 (but only 1 kept because of equals/hashCode)
-        em.getTransaction().commit();
+        // Προσθήκη στην κάρτα (σημαντικό για το cascade)
+        card.addPermission(p1);
+        card.addPermission(p2);
+
+        em.persist(card); // cascade persists permissions
+        em.flush();
         em.clear();
 
         AccessCard saved = em.find(AccessCard.class, card.getCardId());
         assertNotNull(saved);
 
-        // === FIXED ===
-        // EXPECTED: Only 1 permission because both have id=0 and equals() treats them as duplicates.
+        // Έλεγχος: Λόγω equals/hashCode (αν βασίζονται σε business key ή ID),
+        // το Set θα κρατήσει μόνο το ένα αν θεωρούνται ίδια.
+        // Αν η equals ελέγχει μόνο ID (που είναι 0 πριν το save), τότε θα κρατήσει 1.
         assertEquals(1, saved.getPermissions().size(),
-                "Only one permission should be stored because equals() compares id=0 for both before persist.");
+                "Only one permission should be stored because equals() treats them as duplicates before persist.");
     }
 
     @Test
+    @Transactional
     void testAddAccessLogCascade() {
+        // Setup Dependencies
+        Address addr = new Address("Log St", "2", "Log City", "20000", "Greece");
+        Building b = new Building("Log HQ", addr);
+        Area area = new Area("Log Area", b);
+        Checkpoint cp = new Checkpoint("Log CP");
+        b.addArea(area);
+        area.addCheckpoint(cp);
+
+        em.persist(b);
+        em.persist(area);
+        em.persist(cp);
+        em.flush();
 
         AccessCard card = new AccessCard(new Date());
-        Checkpoint cp = em.createQuery("SELECT c FROM Checkpoint c", Checkpoint.class)
-                .setMaxResults(1)
-                .getSingleResult();
+        AccessLog log1 = new AccessLog(PermissionType.AccessGranted, AccessType.In, card, cp);
 
-        AccessLog log1 = new AccessLog(PermissionType.AccessGranted, org.aueb.util.enumerations.AccessType.In, card, cp);
+        // Σύνδεση για Cascade
+        card.addAccessLog(log1);
 
-        em.getTransaction().begin();
         em.persist(card); // cascade persist for AccessLogs
-        em.getTransaction().commit();
+        em.flush();
         em.clear();
 
         AccessCard saved = em.find(AccessCard.class, card.getCardId());
@@ -91,136 +108,108 @@ public class AccessCardJPATest extends JPATest{
     }
 
     @Test
+    @Transactional
     void testDeactivateCard() {
-
         AccessCard card = new AccessCard(new Date());
-
-        em.getTransaction().begin();
         em.persist(card);
-        em.getTransaction().commit();
+        em.flush();
         em.clear();
 
         AccessCard saved = em.find(AccessCard.class, card.getCardId());
         assertNotNull(saved);
 
+        // Domain Logic Call
         saved.deactivateCard();
 
-        em.getTransaction().begin();
-        em.merge(saved);
-        em.getTransaction().commit();
+        em.merge(saved); // Update
+        em.flush();
         em.clear();
 
         AccessCard updated = em.find(AccessCard.class, card.getCardId());
         assertEquals(ActivityStatus.Inactive, updated.getStatus());
     }
 
-    /**
-     * Tests the cascade/orphanRemoval mechanism by removing a Permission from the collection.
-     */
     @Test
+    @Transactional
     void testPermissions_OrphanRemoval() {
+        // Setup User & Card
         User user = new User("PermUser", "p", "P", "P", "p@p.com", UserType.Employee);
         AccessCard card = new AccessCard(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)));
-        user.setAccessCard(card);
+        user.setAccessCard(card); // Cascade User -> Card
 
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        // Setup Building/Area
+        Address addr = new Address("Orphan St", "3", "Orphan City", "30000", "Greece");
+        Building b = new Building("Orphan HQ", addr);
+        Area area = new Area("Orphan Zone", b);
+        b.addArea(area);
 
-        Building b = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", b);
+        em.persist(user); // Persists User & Card
+        em.persist(b);    // Persists Building & Area
+        em.flush();
 
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp1 = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        b.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp1);
-        Area areaToPersist = new Area("Perm Zone Alpha", b);
-
-        em.getTransaction().begin();
-        em.persist(user);
-        em.persist(areaToPersist);
-        em.getTransaction().commit();
-        em.clear();
-
+        // Retrieve managed entities
         AccessCard managedCard = em.find(AccessCard.class, card.getCardId());
-        Area managedArea = em.find(Area.class, areaToPersist.getAreaId());
+        Area managedArea = em.find(Area.class, area.getAreaId());
 
+        // Add Permission
         Permission perm = new Permission(PermissionType.AccessGranted, managedCard, managedArea);
-        managedCard.addPermission(perm);
+        managedCard.addPermission(perm); // Add to collection
 
-        em.getTransaction().begin();
-        em.persist(perm);
-        em.getTransaction().commit();
+        em.flush(); // Save permission via cascade merge/persist
         em.clear();
 
         int permissionId = perm.getPermissionId();
+        assertTrue(permissionId > 0); // Verify it was saved
 
+        // --- ORPHAN REMOVAL TEST ---
         AccessCard cardToModify = em.find(AccessCard.class, managedCard.getCardId());
 
-        em.getTransaction().begin();
+        // Remove from collection
         cardToModify.getPermissions().clear();
-        em.getTransaction().commit();
+
+        em.flush(); // Hibernate should execute DELETE
         em.clear();
 
         assertNull(em.find(Permission.class, permissionId), "The Permission must be deleted due to orphanRemoval.");
     }
 
-    /**
-     * Tests the cascade persistence to the AccessLog collection (One-to-Many)
-     * and verifies the integrity of the inverse User link.
-     */
     @Test
+    @Transactional
     void testAccessLogCollection_andUserLinkIntegrity() {
-        User initialUser = new User("LogUser", "p", "L", "L", "l@l.com", UserType.Employee);
+        User initialUser = new User("LogUser2", "p", "L", "L", "l2@l.com", UserType.Employee);
         Date date = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
         AccessCard card = new AccessCard(date);
         initialUser.setAccessCard(card);
 
-        Address addr = new Address("Test Street", "1", "Test City", "10000", "Greece");
+        Address addr = new Address("Link St", "4", "Link City", "40000", "Greece");
+        Building b = new Building("Link HQ", addr);
+        Area area = new Area("Link Area", b);
+        Checkpoint cp1 = new Checkpoint("Link CP");
+        b.addArea(area);
+        area.addCheckpoint(cp1);
+        cp1.setArea(area);
 
-        Building b = new Building("Test Headquarters", addr);
-        Area serverRoom = new Area("Server Room 101", b);
-
-        /** Checkpoint (Linked with Area)   */
-        Checkpoint cp = new Checkpoint("Server Room Reader");
-
-        /**  Relationships Connection   */
-
-        /** Building <-> Area   */
-        b.addArea(serverRoom);
-
-        /** Area <-> Checkpoint   */
-        serverRoom.addCheckpoint(cp);
-        Area areaToPersist = new Area("Lobby Area", b);
-        Checkpoint cp1 = new Checkpoint("Entry Gate");
-
-        cp1.setArea(areaToPersist);
-
-        em.getTransaction().begin();
         em.persist(initialUser);
-        em.persist(areaToPersist);
+        em.persist(b);
+        em.persist(area);
         em.persist(cp1);
-        em.getTransaction().commit();
+        em.flush();
         em.clear();
 
+        // Retrieve to ensure clean state
         User managedUser = em.find(User.class, initialUser.getUserId());
         AccessCard managedCard = managedUser.getAccessCard();
         Checkpoint managedCp1 = em.find(Checkpoint.class, cp1.getCheckpointId());
 
-        AccessLog log1 = new AccessLog(PermissionType.AccessGranted, AccessType.In, card, managedCp1);
-        managedCard.addAccessLog(log1);
+        // Add Access Log
+        AccessLog log1 = new AccessLog(PermissionType.AccessGranted, AccessType.In, managedCard, managedCp1);
+        managedCard.addAccessLog(log1); // Update collection
 
-        em.getTransaction().begin();
-        em.persist(log1);
-        em.getTransaction().commit();
+        em.persist(log1); // ή em.merge(managedCard) αν έχει cascade
+        em.flush();
         em.clear();
 
         AccessCard retrievedCard = em.find(AccessCard.class, card.getCardId());
-
         assertEquals(1, retrievedCard.getAccessLogs().size(), "Card must hold exactly 1 AccessLog.");
 
         assertNotNull(retrievedCard.getUser(), "The inverse link to User must be correctly loaded.");

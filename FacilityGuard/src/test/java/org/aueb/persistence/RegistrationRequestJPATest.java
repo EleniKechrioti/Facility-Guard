@@ -1,24 +1,27 @@
 package org.aueb.persistence;
 
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.aueb.domain.RegistrationRequest;
 import org.aueb.domain.User;
 import org.aueb.util.enumerations.ActivityStatus;
 import org.aueb.util.enumerations.UserType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@QuarkusTest
 public class RegistrationRequestJPATest {
 
-    private EntityManager em;
+    @Inject
+    EntityManager em;
 
     @Test
+    @Transactional
     void testPersistRegistrationRequest() {
-
         // === Create administrator ===
-        em.getTransaction().begin();
         User admin = new User(
                 "adminUser",
                 "pass",
@@ -28,35 +31,33 @@ public class RegistrationRequestJPATest {
                 UserType.Administrator
         );
         em.persist(admin);
-        em.getTransaction().commit();
-        em.clear();
 
         // === Create RegistrationRequest ===
         RegistrationRequest req = new RegistrationRequest();
-        req.setUser(em.find(User.class, admin.getUserId()));
-
-        em.getTransaction().begin();
+        req.setUser(admin);
         em.persist(req);
-        em.getTransaction().commit();
+
+        // Force write and clear cache to simulate retrieval from DB
+        em.flush();
         em.clear();
 
         // === Retrieve ===
-        RegistrationRequest saved =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
+        RegistrationRequest saved = em.find(RegistrationRequest.class, req.getRegistrationId());
 
         assertNotNull(saved);
         assertEquals(ActivityStatus.Active, saved.getStatus());
         assertFalse(saved.isApproved());
         assertNotNull(saved.getRequestDate());
 
+        // Ελέγχουμε αν συνδέθηκε σωστά με τον user
+        assertNotNull(saved.getUser());
         assertEquals(admin.getUserId(), saved.getUser().getUserId());
     }
 
     @Test
+    @Transactional
     void testUpdateApprovedStatus_Approve() {
-
         // === Setup admin + request ===
-        em.getTransaction().begin();
         User admin = new User("admin2", "pass", "A", "A", "a@a.com", UserType.Administrator);
         em.persist(admin);
 
@@ -64,29 +65,28 @@ public class RegistrationRequestJPATest {
         req.setUser(admin);
         em.persist(req);
 
-        em.getTransaction().commit();
+        em.flush();
         em.clear();
 
         // === Approve ===
-        RegistrationRequest managedReq =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
+        RegistrationRequest managedReq = em.find(RegistrationRequest.class, req.getRegistrationId());
+        User managedAdmin = em.find(User.class, admin.getUserId());
 
-        em.getTransaction().begin();
-        managedReq.setApprovedStatus(true, admin);
-        em.getTransaction().commit();
+        managedReq.setApprovedStatus(true, managedAdmin);
+
+        em.flush();
         em.clear();
 
-        RegistrationRequest updated =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
-
+        // === Verify ===
+        RegistrationRequest updated = em.find(RegistrationRequest.class, req.getRegistrationId());
         assertTrue(updated.isApproved());
         assertEquals(ActivityStatus.Active, updated.getStatus());
     }
 
     @Test
+    @Transactional
     void testUpdateApprovedStatus_Reject() {
-
-        em.getTransaction().begin();
+        // === Setup ===
         User admin = new User("admin3", "pass", "A", "A", "admin3@mail.com", UserType.Administrator);
         em.persist(admin);
 
@@ -94,30 +94,28 @@ public class RegistrationRequestJPATest {
         req.setUser(admin);
         em.persist(req);
 
-        em.getTransaction().commit();
+        em.flush();
         em.clear();
 
         // === Reject ===
-        RegistrationRequest managedReq =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
+        RegistrationRequest managedReq = em.find(RegistrationRequest.class, req.getRegistrationId());
+        User managedAdmin = em.find(User.class, admin.getUserId());
 
-        em.getTransaction().begin();
-        managedReq.setApprovedStatus(false, admin);
-        em.getTransaction().commit();
+        managedReq.setApprovedStatus(false, managedAdmin);
+
+        em.flush();
         em.clear();
 
-        RegistrationRequest updated =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
-
+        // === Verify ===
+        RegistrationRequest updated = em.find(RegistrationRequest.class, req.getRegistrationId());
         assertFalse(updated.isApproved());
         assertEquals(ActivityStatus.Inactive, updated.getStatus());
     }
 
     @Test
+    @Transactional
     void testInvalidateRequest() {
-
-        em.getTransaction().begin();
-
+        // === Setup ===
         User admin = new User("admin4", "pass", "A", "A", "admin4@mail.com", UserType.Administrator);
         em.persist(admin);
 
@@ -125,21 +123,20 @@ public class RegistrationRequestJPATest {
         req.setUser(admin);
         em.persist(req);
 
-        em.getTransaction().commit();
+        em.flush();
         em.clear();
 
         // === Invalidate ===
-        RegistrationRequest managedReq =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
+        RegistrationRequest managedReq = em.find(RegistrationRequest.class, req.getRegistrationId());
+        User managedAdmin = em.find(User.class, admin.getUserId());
 
-        em.getTransaction().begin();
-        managedReq.invalidateRequest(admin);
-        em.getTransaction().commit();
+        managedReq.invalidateRequest(managedAdmin);
+
+        em.flush();
         em.clear();
 
-        RegistrationRequest updated =
-                em.find(RegistrationRequest.class, req.getRegistrationId());
-
+        // === Verify ===
+        RegistrationRequest updated = em.find(RegistrationRequest.class, req.getRegistrationId());
         assertEquals(ActivityStatus.Inactive, updated.getStatus());
         assertFalse(updated.isApproved());
     }
