@@ -1,57 +1,58 @@
 package org.aueb.persistence;
 
-import jakarta.persistence.EntityManager;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.transaction.Transactional;
 import org.aueb.domain.*;
 import org.aueb.util.Address;
 import org.aueb.util.enumerations.PermissionType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CheckpointJPATest {
-
+@QuarkusTest
+public class CheckpointJPATest extends JPATest {
 
     @Test
+    @Transactional
     void testCheckpointPersistence() {
 
-        EntityManager em = null;//JPAUtil.getCurrentEntityManager();
-        em.getTransaction().begin();
-
-        /** Create Building + Area   */
+        // Create Building + Area
         Address address = new Address("Test St", "10", "Athens", "11111", "Greece");
         Building building = new Building("HQ", address);
         Area area = new Area("Server Room", building);
 
-        em.persist(building);
-        em.persist(area);
+        building.addArea(area);
+        em.persist(building); // cascades Area
+        em.flush();
 
-        /** Create AccessCard (required by Permission) */
+        // Create AccessCard
         AccessCard card = new AccessCard(new Date());
         em.persist(card);
 
-        /** Create Permission (REQUIRES AccessCard) */
-        Permission permission = new Permission(PermissionType.AccessGranted, card, area);
+        // Create Permission
+        Permission permission =
+                new Permission(PermissionType.AccessGranted, card, area);
         em.persist(permission);
 
-        /** Create Checkpoint   */
+        // Create Checkpoint
         Checkpoint cp = new Checkpoint("Door Reader A");
         cp.setArea(area);
         cp.setPermission(permission);
-
         em.persist(cp);
 
-        em.getTransaction().commit();
+        em.flush();
+        em.clear();
 
-        /**  Validate Load   */
-        EntityManager em2 = null;//JPAUtil.getCurrentEntityManager();
-        Checkpoint loaded = em2.find(Checkpoint.class, cp.getCheckpointId());
+        // Validate Load
+        Checkpoint loaded =
+                em.find(Checkpoint.class, cp.getCheckpointId());
 
         assertNotNull(loaded);
         assertEquals("Door Reader A", loaded.getName());
         assertEquals(area.getAreaId(), loaded.getArea().getAreaId());
-        assertEquals(permission.getPermissionId(), loaded.getPermission().getPermissionId());
+        assertEquals(permission.getPermissionId(),
+                loaded.getPermission().getPermissionId());
     }
 }
