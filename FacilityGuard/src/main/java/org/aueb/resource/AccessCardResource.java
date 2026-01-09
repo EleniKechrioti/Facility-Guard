@@ -6,14 +6,22 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.aueb.domain.AccessCard;
+import org.aueb.domain.Area;
+import org.aueb.domain.Permission;
 import org.aueb.domain.User;
 import org.aueb.representation.AccessCardMapper;
+import org.aueb.representation.PermissionMapper;
 import org.aueb.persistence.AccessCardRepository;
+import org.aueb.persistence.AreaRepository;
+import org.aueb.persistence.PermissionRepository;
 import org.aueb.persistence.UserRepository;
-import org.aueb.representation.AccessCardRepresentation;
+import org.aueb.representation.PermissionRepresentation;
+import org.aueb.util.enumerations.PermissionType;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/cards")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,8 +34,18 @@ public class AccessCardResource {
     @Inject
     UserRepository userRepository;
 
+    // Προσθήκη Repositories για Permissions/Areas
+    @Inject
+    PermissionRepository permissionRepository;
+
+    @Inject
+    AreaRepository areaRepository;
+
     @Inject
     AccessCardMapper cardMapper;
+
+    @Inject
+    PermissionMapper permissionMapper;
 
     /**
      * Επιστρέφει μια κάρτα με βάση το ID της.
@@ -35,8 +53,6 @@ public class AccessCardResource {
     @GET
     @Path("/{id}")
     public Response getCardById(@PathParam("id") int cardId) {
-        // Παρατήρηση: Στο Repository το findById περιμένει Long, άρα κάνουμε cast αν χρειαστεί
-        // ή αλλάζουμε τον τύπο του ID στο Panache. Εδώ υποθέτουμε cast.
         AccessCard card = cardRepository.findById(cardId);
 
         if (card == null) {
@@ -65,7 +81,6 @@ public class AccessCardResource {
 
     /**
      * Έκδοση νέας κάρτας.
-     * Αυτό είναι το πιο σημαντικό endpoint.
      */
     @POST
     @Path("/issue")
@@ -73,19 +88,17 @@ public class AccessCardResource {
     public Response issueCard(IssueCardRequest request) {
         // 1. Βρίσκουμε τον χρήστη
         User user = userRepository.findById(request.userId);
+
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("User not found").build();
         }
 
         try {
-            // 2. ΚΑΛΟΥΜΕ ΤΟ DOMAIN LOGIC!
-            // Η μέθοδος issueAccessCard ελέγχει ΑΥΤΟΜΑΤΑ αν υπάρχει εγκεκριμένη αίτηση.
-            // Αν δεν υπάρχει, πετάει IllegalStateException.
+            // 2. Domain Logic
             AccessCard newCard = user.issueAccessCard(request.expirationDate);
 
-            // 3. Αποθήκευση (Λόγω Cascade.ALL στον User, ίσως να μην χρειαζόταν persist,
-            // αλλά το κάνουμε explicit για σιγουριά).
+            // 3. Persist
             cardRepository.persist(newCard);
 
             // 4. Επιστροφή
@@ -94,9 +107,8 @@ public class AccessCardResource {
                     .build();
 
         } catch (IllegalStateException e) {
-            // Αν δεν υπάρχει approved request ή αν έχει ήδη κάρτα
-            return Response.status(Response.Status.BAD_REQUEST) // ή 409 Conflict
-                    .entity(e.getMessage()) // "Cannot issue card: No ACTIVE and APPROVED request..."
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
                     .build();
         }
     }
@@ -108,7 +120,8 @@ public class AccessCardResource {
     @Path("/{id}/deactivate")
     @Transactional
     public Response deactivateCard(@PathParam("id") int cardId) {
-        AccessCard card = cardRepository.findById((cardId));
+        AccessCard card = cardRepository.findById(cardId);
+
         if (card == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -122,11 +135,75 @@ public class AccessCardResource {
         }
     }
 
-    // ==========================================
-    // Inner DTO Class για το Input της issueCard
-    // ==========================================
+    // SUB-RESOURCE: PERMISSIONS
+
+    /**
+     * Λήψη όλων των δικαιωμάτων μιας κάρτας.
+     * URL: GET /cards/{id}/permissions
+     */
+    @GET
+    @Path("/{id}/permissions")
+    public Response getCardPermissions(@PathParam("id") int cardId) {
+        // Ελέγχουμε αν υπάρχει η κάρτα
+        if (cardRepository.findById(cardId) == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        // Χρήση του PermissionRepository που φτιάξαμε
+        List<PermissionRepresentation> permissions = permissionRepository.findByCardId(cardId)
+                .stream()
+                .map(permissionMapper::toRepresentation)
+                .collect(Collectors.toList());
+
+        return Response.ok(permissions).build();
+    }
+
+    /**
+     * Ανάθεση δικαιώματος πρόσβασης σε περιοχή.
+     * URL: POST /cards/{id}/permissions
+     * Body: { "areaId": 5, "type": "AccessGranted" }
+     */
+    @POST
+    @Path("/{id}/permissions")
+    @Transactional
+    public Response grantPermission(@PathParam("id") int cardId, GrantAccessRequest request) {
+        // 1. Έλεγχος Κάρτας
+        AccessCard card = cardRepository.findById(cardId);
+        if (card == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Card not found").build();
+        }
+
+        // 2. Έλεγχος Περιοχής
+        Area area = areaRepository.findById(request.areaId);
+        if (area == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Area not found").build();
+        }
+
+        // 3. Έλεγχος αν υπάρχει ήδη δικαίωμα (για να μην έχουμε διπλότυπα)
+        if (permissionRepository.findByCardAndArea(cardId, request.areaId).isPresent()) {
+            return Response.status(Response.Status.CONFLICT).entity("Permission already exists for this area").build();
+        }
+
+        // 4. Δημιουργία Permission
+        PermissionType type = (request.type != null) ? request.type : PermissionType.AccessGranted;
+        Permission newPermission = new Permission(type, card, area);
+
+        permissionRepository.persist(newPermission);
+
+        return Response.status(Response.Status.CREATED)
+                .entity(permissionMapper.toRepresentation(newPermission))
+                .build();
+    }
+
+    // Inner DTO Classes
+
     public static class IssueCardRequest {
         public int userId;
         public Date expirationDate;
+    }
+
+    public static class GrantAccessRequest {
+        public int areaId;
+        public PermissionType type; // Προαιρετικό, default AccessGranted
     }
 }
