@@ -2,6 +2,7 @@ package org.aueb.persistence;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.aueb.domain.*;
 import org.aueb.util.enumerations.AccessType;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @QuarkusTest
-public class RepositoriesTests {
+public class RepositoriesTests extends JPATest{
 
     @Inject AlertRepository alertRepo;
     @Inject AccessLogRepository logRepo;
@@ -23,6 +24,7 @@ public class RepositoriesTests {
     @Inject AccessCardRepository cardRepo;
     @Inject AreaRepository areaRepo;
     @Inject BuildingRepository buildingRepo;
+    @Inject EntityManager em;
 
     @AfterEach
     @Transactional
