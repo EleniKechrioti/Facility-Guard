@@ -195,7 +195,7 @@ public class RepositoriesTests extends JPATest{
         // Card λήγει αύριο (Expiring Soon check)
         Date tomorrow = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         AccessCard card = new AccessCard(tomorrow);
-        // Η κάρτα είναι Active by default στον constructor; Αν όχι, την ενεργοποιούμε:
+        // Η κάρτα είναι Active by default στον constructor. (Αν όχι, την ενεργοποιούμε):
 
 
         user.setAccessCard(card);
