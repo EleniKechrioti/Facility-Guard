@@ -196,7 +196,7 @@ public class RepositoriesTests extends JPATest{
         Date tomorrow = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         AccessCard card = new AccessCard(tomorrow);
         // Η κάρτα είναι Active by default στον constructor; Αν όχι, την ενεργοποιούμε:
-        // (Υποθέτω πως ο constructor βάζει status Active, αλλιώς θέλει setter)
+
 
         user.setAccessCard(card);
         userRepo.persist(user); // Cascades to Card
@@ -257,17 +257,15 @@ public class RepositoriesTests extends JPATest{
         // Create 2 requests: One Pending, One Inactive
         RegistrationRequest req1 = new RegistrationRequest();
         req1.setUser(u);
-        // req1 status is Active by default? Assumed yes. Approved is false.
+
 
         RegistrationRequest req2 = new RegistrationRequest();
         req2.setUser(u);
         req2.setApprovedStatus(false, new User("adm", "p","A","A","a@t.com", UserType.Administrator)); // Reject -> Inactive
-        // Πρέπει να σώσουμε τον admin αν τον χρησιμοποιούμε, αλλά εδώ θα κάνουμε manually setStatus για ευκολία στο τεστ αν χρειαστεί
-        // Ή απλά persist req1 (Pending) και req2 (Reject)
+
 
         requestRepo.persist(req1);
         // Persist req2 manually as inactive (simulating repository logic)
-        // Προσοχή: Η persist είναι void, το state αλλάζει στο αντικείμενο.
 
         // Test findPendingRequests
         List<RegistrationRequest> pending = requestRepo.findPendingRequests();
