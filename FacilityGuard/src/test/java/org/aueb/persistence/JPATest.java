@@ -19,7 +19,9 @@ public class JPATest {
     @BeforeEach
     public void initDb()  {
         em.createNativeQuery("DELETE FROM registration_request").executeUpdate();
+        em.createNativeQuery("DELETE FROM alerts").executeUpdate();
         em.createNativeQuery("DELETE FROM access_log").executeUpdate();
+        em.createNativeQuery("DELETE FROM checkpoints").executeUpdate();
         em.createNativeQuery("DELETE FROM permission").executeUpdate();
         em.createNativeQuery("UPDATE users SET card_fk = NULL").executeUpdate(); // Σπάμε τον δεσμό
         em.createNativeQuery("DELETE FROM access_card").executeUpdate();

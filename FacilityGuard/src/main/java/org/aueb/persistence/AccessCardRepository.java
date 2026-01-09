@@ -1,6 +1,7 @@
 package org.aueb.persistence;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.aueb.domain.AccessCard;
@@ -10,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
-public class AccessCardRepository implements PanacheRepository<AccessCard> {
+public class AccessCardRepository implements PanacheRepositoryBase<AccessCard, Integer> {
 
     /**
      * Βρίσκει όλες τις κάρτες που είναι αυτή τη στιγμή ΕΝΕΡΓΕΣ.

@@ -5,17 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/AreaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/BuildingRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AreaMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AreaRepresentation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/BuildingMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/BuildingRepresentation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/BuildingResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/resource/BuildingResourceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_1_2026_6_25_____Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/service/AccessControlService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/service/FacilityService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/service/UserManagementService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/AccessCardRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/AccessCardRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/AccessCardResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/AccessCardResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/RegistrationRequestResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/RegistrationRequestResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/JPATest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,22 +51,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JUnit.AccessCardJPATest1.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AreaJPATest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BuildingJPATest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BuildingResourceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.PermissionJPATest1.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.RegistrationRequestJPATest1.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserJPATest.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.AccessCardJPATest1.executor": "Run",
+    "JUnit.AreaJPATest.executor": "Run",
+    "JUnit.BuildingJPATest.executor": "Run",
+    "JUnit.BuildingResourceTest.executor": "Run",
+    "JUnit.PermissionJPATest1.executor": "Run",
+    "JUnit.RegistrationRequestJPATest1.executor": "Run",
+    "JUnit.UserJPATest.executor": "Run",
+    "JUnit.aueb in FacilityGuard.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
-  <component name="RunManager" selected="JUnit.BuildingResourceTest">
+}]]></component>
+  <component name="RunManager" selected="JUnit.aueb in FacilityGuard">
     <configuration name="AreaJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -113,21 +113,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RegistrationRequestJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.persistence.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.persistence" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.RegistrationRequestJPATest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="UserJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -143,12 +128,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="aueb in FacilityGuard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.BuildingResourceTest" />
-        <item itemvalue="JUnit.AreaJPATest" />
-        <item itemvalue="JUnit.BuildingJPATest" />
+        <item itemvalue="JUnit.aueb in FacilityGuard" />
         <item itemvalue="JUnit.UserJPATest" />
+        <item itemvalue="JUnit.AreaJPATest" />
+        <item itemvalue="JUnit.BuildingResourceTest" />
+        <item itemvalue="JUnit.BuildingJPATest" />
       </list>
     </recent_temporary>
   </component>

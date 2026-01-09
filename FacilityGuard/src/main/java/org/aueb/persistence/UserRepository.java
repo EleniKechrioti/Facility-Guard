@@ -1,6 +1,6 @@
 package org.aueb.persistence;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.aueb.domain.User;
 import org.aueb.util.enumerations.UserType;
@@ -8,7 +8,7 @@ import org.aueb.util.enumerations.UserType;
 import java.util.List;
 
 @ApplicationScoped
-public class UserRepository implements PanacheRepository<User> {
+public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
     // Μπορούμε να προσθέσουμε custom queries εδώ
     public User findByUsername(String username) {

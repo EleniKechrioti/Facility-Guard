@@ -43,7 +43,7 @@ public class RegistrationRequestResource {
                     .entity("User ID is required").build();
         }
 
-        User user = userRepository.findById((long) requestRep.user.id);
+        User user = userRepository.findById(requestRep.user.id);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("User not found").build();
@@ -86,7 +86,7 @@ public class RegistrationRequestResource {
     @PUT
     @Path("/{id}/approve")
     @Transactional
-    public Response approveRequest(@PathParam("id") int requestId, @QueryParam("adminId") Long adminId) {
+    public Response approveRequest(@PathParam("id") int requestId, @QueryParam("adminId") int adminId) {
         return updateRequestStatus(requestId, adminId, true);
     }
 
@@ -97,12 +97,12 @@ public class RegistrationRequestResource {
     @PUT
     @Path("/{id}/reject")
     @Transactional
-    public Response rejectRequest(@PathParam("id") int requestId, @QueryParam("adminId") Long adminId) {
+    public Response rejectRequest(@PathParam("id") int requestId, @QueryParam("adminId") int adminId) {
         return updateRequestStatus(requestId, adminId, false);
     }
 
     // Βοηθητική μέθοδος για να μην γράφουμε διπλό κώδικα (DRY)
-    private Response updateRequestStatus(int requestId, Long adminId, boolean approve) {
+    private Response updateRequestStatus(int requestId, int adminId, boolean approve) {
         // 1. Βρίσκουμε την αίτηση
         RegistrationRequest request = requestRepository.findById((long) requestId);
         if (request == null) {
@@ -110,10 +110,10 @@ public class RegistrationRequestResource {
         }
 
         // 2. Βρίσκουμε τον Admin (για τον έλεγχο ασφαλείας)
-        if (adminId == null) {
+        if (adminId == 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity("adminId query param is required").build();
         }
-        User adminUser = userRepository.findById(adminId);
+        User adminUser = userRepository.findById((adminId));
         if (adminUser == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Admin user not found").build();
         }

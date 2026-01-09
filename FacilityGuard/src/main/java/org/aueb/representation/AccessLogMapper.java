@@ -43,7 +43,7 @@ public abstract class AccessLogMapper {
 
         if (dto.cardId != null) {
             AccessCard card =
-                    accessCardRepository.findById(dto.cardId.longValue());
+                    accessCardRepository.findById(dto.cardId);
             entity.setAccessCard(card);
         }
 

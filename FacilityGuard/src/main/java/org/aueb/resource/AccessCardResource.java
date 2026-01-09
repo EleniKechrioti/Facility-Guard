@@ -37,7 +37,7 @@ public class AccessCardResource {
     public Response getCardById(@PathParam("id") int cardId) {
         // Παρατήρηση: Στο Repository το findById περιμένει Long, άρα κάνουμε cast αν χρειαστεί
         // ή αλλάζουμε τον τύπο του ID στο Panache. Εδώ υποθέτουμε cast.
-        AccessCard card = cardRepository.findById((long) cardId);
+        AccessCard card = cardRepository.findById(cardId);
 
         if (card == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -72,7 +72,7 @@ public class AccessCardResource {
     @Transactional
     public Response issueCard(IssueCardRequest request) {
         // 1. Βρίσκουμε τον χρήστη
-        User user = userRepository.findById((long) request.userId);
+        User user = userRepository.findById(request.userId);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("User not found").build();
@@ -108,7 +108,7 @@ public class AccessCardResource {
     @Path("/{id}/deactivate")
     @Transactional
     public Response deactivateCard(@PathParam("id") int cardId) {
-        AccessCard card = cardRepository.findById((long) cardId);
+        AccessCard card = cardRepository.findById((cardId));
         if (card == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
