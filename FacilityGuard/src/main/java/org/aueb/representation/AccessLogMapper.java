@@ -9,8 +9,7 @@ import org.aueb.persistence.CheckpointRepository;
 import org.mapstruct.*;
 
 @Mapper(
-        componentModel = "jakarta",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR
+        componentModel = "cdi"
 )
 public abstract class AccessLogMapper {
 
@@ -40,10 +39,8 @@ public abstract class AccessLogMapper {
             AccessLogRepresentation dto,
             @MappingTarget AccessLog entity
     ) {
-
         if (dto.cardId != null) {
-            AccessCard card =
-                    accessCardRepository.findById(dto.cardId);
+            AccessCard card = accessCardRepository.findById(dto.cardId);
             entity.setAccessCard(card);
         }
 

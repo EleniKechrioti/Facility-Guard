@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="Added Checkpoint mapper and representation">
+    <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="Added Checkpoint,Accesslog Repository tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/RepositoriesTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/RepositoriesTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,11 +49,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "JUnit.AccessCardJPATest1.executor": "Run",
+    "JUnit.AccessLogRepresentationTest.executor": "Run",
     "JUnit.AlertRepresentationTest.executor": "Run",
     "JUnit.AlertResourceTest.executor": "Run",
     "JUnit.AreaJPATest.executor": "Run",
     "JUnit.BuildingJPATest.executor": "Run",
     "JUnit.BuildingResourceTest.executor": "Run",
+    "JUnit.CheckpointRepresentationTest.executor": "Run",
     "JUnit.PermissionJPATest1.executor": "Run",
     "JUnit.RegistrationRequestJPATest1.executor": "Run",
     "JUnit.RepositoriesTests.executor": "Run",
@@ -67,8 +69,8 @@
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.RepositoriesTests">
-    <configuration name="AlertRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.CheckpointRepresentationTest">
+    <configuration name="AccessLogRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
         <pattern>
@@ -77,22 +79,22 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="org.aueb.representation" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.AlertRepresentationTest" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.AccessLogRepresentationTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AlertResourceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CheckpointRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.aueb.resource.*" />
+          <option name="PATTERN" value="org.aueb.representation.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.resource" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.resource.AlertResourceTest" />
+      <option name="PACKAGE_NAME" value="org.aueb.representation" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.CheckpointRepresentationTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -139,11 +141,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CheckpointRepresentationTest" />
+        <item itemvalue="JUnit.AccessLogRepresentationTest" />
         <item itemvalue="JUnit.RepositoriesTests" />
         <item itemvalue="JUnit.RepositoriesTests.testCheckpointFetchByArea" />
         <item itemvalue="JUnit.aueb in FacilityGuard" />
-        <item itemvalue="JUnit.AlertResourceTest" />
-        <item itemvalue="JUnit.AlertRepresentationTest" />
       </list>
     </recent_temporary>
   </component>
@@ -163,12 +165,21 @@
       <option name="project" value="LOCAL" />
       <updated>1768049699461</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added Checkpoint,Accesslog Repository tests">
+      <option name="closed" value="true" />
+      <created>1768051168468</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1768051168468</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added Checkpoint mapper and representation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Checkpoint mapper and representation" />
+    <MESSAGE value="Added Checkpoint,Accesslog Repository tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Checkpoint,Accesslog Repository tests" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/team01_ft_2025_26$All_in_FacilityGuard.ic" NAME="All in FacilityGuard Coverage Results" MODIFIED="1767711038225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
