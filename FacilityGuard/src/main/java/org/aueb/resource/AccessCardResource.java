@@ -16,6 +16,7 @@ import org.aueb.persistence.AreaRepository;
 import org.aueb.persistence.PermissionRepository;
 import org.aueb.persistence.UserRepository;
 import org.aueb.representation.PermissionRepresentation;
+import org.aueb.service.AccessControlService;
 import org.aueb.util.enumerations.PermissionType;
 
 import java.net.URI;
@@ -46,6 +47,9 @@ public class AccessCardResource {
 
     @Inject
     PermissionMapper permissionMapper;
+
+    @Inject
+    AccessControlService accessService;
 
     /**
      * Επιστρέφει μια κάρτα με βάση το ID της.
@@ -193,6 +197,18 @@ public class AccessCardResource {
         return Response.status(Response.Status.CREATED)
                 .entity(permissionMapper.toRepresentation(newPermission))
                 .build();
+    }
+
+    @GET
+    @Path("/location/{cardId}")
+    public Response getLocation(@PathParam("cardId") Integer cardId) {
+        Area area = accessService.findCurrentLocation(cardId);
+
+        if (area != null) {
+            return Response.ok("{\"status\": \"INSIDE\", \"area\": \"" + area.getName() + "\"}").build();
+        } else {
+            return Response.ok("{\"status\": \"OUTSIDE\"}").build();
+        }
     }
 
     // Inner DTO Classes

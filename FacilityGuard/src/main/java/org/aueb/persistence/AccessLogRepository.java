@@ -111,4 +111,14 @@ public class AccessLogRepository
                         " order by l.timestamp desc"
         ).page(0, n).list();
     }
+
+    /**
+     * Finds the last SUCCESSFUL access of a card.
+     * Necessary for Anti-Passback control.
+     */
+    public java.util.Optional<AccessLog> findLastSuccessfulLog(Integer cardId) {
+        return find("accessCard.cardId = ?1 and accessGranted = ?2 order by timestamp desc",
+                cardId, PermissionType.AccessGranted)
+                .firstResultOptional();
+    }
 }
