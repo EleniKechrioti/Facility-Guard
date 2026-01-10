@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="Added Checkpoint,Accesslog Repository tests">
-      <change afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/service/AccessControlServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/AccessLogRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/persistence/AccessLogRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/AccessCardResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/AccessCardResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/service/AccessControlService.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/service/AccessControlService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,12 +30,12 @@
     &quot;assignee&quot;: &quot;DimitrisBls&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/softeng-aueb/team01-ft-2025-26.git&quot;,
-    &quot;accountId&quot;: &quot;6b6cab55-2dcb-45ed-b976-4e13c97da421&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/softeng-aueb/team01-ft-2025-26",
+    "accountId": "e3825885-dcd6-420e-910c-a5ab1ae2445d"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -53,12 +51,14 @@
   "keyToString": {
     "JUnit.AccessCardJPATest1.executor": "Run",
     "JUnit.AccessControlServiceTest.executor": "Run",
+    "JUnit.AccessLogMapperTest.executor": "Run",
     "JUnit.AccessLogRepresentationTest.executor": "Run",
     "JUnit.AlertRepresentationTest.executor": "Run",
     "JUnit.AlertResourceTest.executor": "Run",
     "JUnit.AreaJPATest.executor": "Run",
     "JUnit.BuildingJPATest.executor": "Run",
     "JUnit.BuildingResourceTest.executor": "Run",
+    "JUnit.CheckpointMapperTest.executor": "Run",
     "JUnit.CheckpointRepresentationTest.executor": "Run",
     "JUnit.PermissionJPATest1.executor": "Run",
     "JUnit.RegistrationRequestJPATest1.executor": "Run",
@@ -73,7 +73,7 @@
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.AccessControlServiceTest">
+  <component name="RunManager" selected="JUnit.CheckpointMapperTest">
     <configuration name="AccessControlServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -89,7 +89,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AccessLogRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AccessLogMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
         <pattern>
@@ -98,7 +98,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="org.aueb.representation" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.AccessLogRepresentationTest" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.AccessLogMapperTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -119,6 +119,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CheckpointMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.aueb.representation.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.aueb.representation" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.CheckpointMapperTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CheckpointRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -134,30 +149,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RepositoriesTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.persistence.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.persistence" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.RepositoriesTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CheckpointMapperTest" />
+        <item itemvalue="JUnit.AccessLogMapperTest" />
         <item itemvalue="JUnit.AccessControlServiceTest" />
         <item itemvalue="JUnit.BuildingResourceTest" />
         <item itemvalue="JUnit.CheckpointRepresentationTest" />
-        <item itemvalue="JUnit.AccessLogRepresentationTest" />
-        <item itemvalue="JUnit.RepositoriesTests" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

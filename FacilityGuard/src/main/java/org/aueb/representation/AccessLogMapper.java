@@ -8,9 +8,9 @@ import org.aueb.persistence.AccessCardRepository;
 import org.aueb.persistence.CheckpointRepository;
 import org.mapstruct.*;
 
-@Mapper(
-        componentModel = "cdi"
-)
+import java.util.Date;
+
+@Mapper(componentModel = "cdi")
 public abstract class AccessLogMapper {
 
     @Inject
@@ -19,26 +19,30 @@ public abstract class AccessLogMapper {
     @Inject
     CheckpointRepository checkpointRepository;
 
-    /* ===================== ENTITY → DTO ===================== */
+    /* ========= ENTITY → DTO ========= */
 
     @Mapping(target = "cardId", source = "accessCard.cardId")
     @Mapping(target = "checkpointId", source = "checkpoint.checkpointId")
     public abstract AccessLogRepresentation toRepresentation(AccessLog entity);
 
-    /* ===================== DTO → ENTITY ===================== */
+    /* ========= DTO → ENTITY ========= */
 
     @Mapping(target = "accessCard", ignore = true)
     @Mapping(target = "checkpoint", ignore = true)
     @Mapping(target = "timestamp", ignore = true)
     public abstract AccessLog toModel(AccessLogRepresentation dto);
 
-    /* ===================== AFTER MAPPING ===================== */
+    /* ========= AFTER MAPPING ========= */
 
     @AfterMapping
     public void resolveRelations(
             AccessLogRepresentation dto,
             @MappingTarget AccessLog entity
     ) {
+        if (entity.getTimestamp() == null) {
+            entity.setTimestamp(new Date());   // ✅ ΤΟ ΚΡΙΣΙΜΟ
+        }
+
         if (dto.cardId != null) {
             AccessCard card = accessCardRepository.findById(dto.cardId);
             entity.setAccessCard(card);
@@ -49,4 +53,5 @@ public abstract class AccessLogMapper {
             entity.setCheckpoint(checkpoint);
         }
     }
+
 }
