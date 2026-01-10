@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="Added Checkpoint,Accesslog Repository tests">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/CheckpointMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/CheckpointMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/BuildingResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/resource/BuildingResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/resource/BuildingResourceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/resource/BuildingResourceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,30 +49,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JUnit.AccessCardJPATest1.executor": "Run",
-    "JUnit.AccessLogRepresentationTest.executor": "Run",
-    "JUnit.AlertRepresentationTest.executor": "Run",
-    "JUnit.AlertResourceTest.executor": "Run",
-    "JUnit.AreaJPATest.executor": "Run",
-    "JUnit.BuildingJPATest.executor": "Run",
-    "JUnit.BuildingResourceTest.executor": "Run",
-    "JUnit.CheckpointRepresentationTest.executor": "Run",
-    "JUnit.PermissionJPATest1.executor": "Run",
-    "JUnit.RegistrationRequestJPATest1.executor": "Run",
-    "JUnit.RepositoriesTests.executor": "Run",
-    "JUnit.RepositoriesTests.testCheckpointFetchByArea.executor": "Run",
-    "JUnit.UserJPATest.executor": "Run",
-    "JUnit.aueb in FacilityGuard.executor": "Coverage",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.AccessCardJPATest1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AccessLogRepresentationTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AlertRepresentationTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AlertResourceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AreaJPATest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BuildingJPATest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BuildingResourceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CheckpointRepresentationTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PermissionJPATest1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.RegistrationRequestJPATest1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.RepositoriesTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.RepositoriesTests.testCheckpointFetchByArea.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserJPATest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.aueb in FacilityGuard.executor&quot;: &quot;Coverage&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="JUnit.CheckpointRepresentationTest">
+}</component>
+  <component name="RunManager" selected="JUnit.BuildingResourceTest">
     <configuration name="AccessLogRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -80,6 +83,21 @@
       </extension>
       <option name="PACKAGE_NAME" value="org.aueb.representation" />
       <option name="MAIN_CLASS_NAME" value="org.aueb.representation.AccessLogRepresentationTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BuildingResourceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FacilityGuard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.aueb.resource.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.aueb.resource" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.resource.BuildingResourceTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -131,21 +149,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="aueb in FacilityGuard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.BuildingResourceTest" />
         <item itemvalue="JUnit.CheckpointRepresentationTest" />
         <item itemvalue="JUnit.AccessLogRepresentationTest" />
         <item itemvalue="JUnit.RepositoriesTests" />
         <item itemvalue="JUnit.RepositoriesTests.testCheckpointFetchByArea" />
-        <item itemvalue="JUnit.aueb in FacilityGuard" />
       </list>
     </recent_temporary>
   </component>
