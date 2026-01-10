@@ -1,7 +1,6 @@
 package org.aueb.resource;
 
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -9,10 +8,8 @@ import jakarta.ws.rs.core.Response;
 import org.aueb.domain.Area;
 import org.aueb.domain.Building;
 import org.aueb.domain.Checkpoint;
-import org.aueb.persistence.AreaRepository;
-import org.aueb.persistence.BuildingRepository;
-import org.aueb.persistence.CheckpointRepository;
 import org.aueb.representation.*;
+import org.aueb.service.FacilityService;
 
 import java.net.URI;
 import java.util.List;
@@ -23,22 +20,11 @@ import java.util.List;
 public class BuildingResource {
 
     @Inject
-    BuildingRepository buildingRepository;
+    FacilityService facilityService;
 
-    @Inject
-    AreaRepository areaRepository;
-
-    @Inject
-    CheckpointRepository checkpointRepository;
-
-    @Inject
-    BuildingMapper buildingMapper;
-
-    @Inject
-    AreaMapper areaMapper;
-
-    @Inject
-    CheckpointMapper checkpointMapper;
+    @Inject BuildingMapper buildingMapper;
+    @Inject AreaMapper areaMapper;
+    @Inject CheckpointMapper checkpointMapper;
 
     /**
      * GET /buildings
@@ -46,7 +32,7 @@ public class BuildingResource {
      */
     @GET
     public List<BuildingRepresentation> getAllBuildings() {
-        return buildingMapper.toBuildingRepresentationList(buildingRepository.listAll());
+        return buildingMapper.toBuildingRepresentationList(facilityService.getAllBuildings());
     }
 
     /**
@@ -55,13 +41,14 @@ public class BuildingResource {
      * Body: { "name": "...", "address": { ... } }
      */
     @POST
-    @Transactional
     public Response createBuilding(@Valid BuildingRepresentation dto) {
+        // DTO -> Entity
         Building building = buildingMapper.toModel(dto);
 
-        buildingRepository.persist(building);
+        // Business Logic
+        facilityService.createBuilding(building);
 
-        // Returns 201 Created with the new item
+        // Entity -> DTO
         return Response.created(URI.create("/buildings/" + building.getBuildingId()))
                 .entity(buildingMapper.toRepresentation(building))
                 .build();
@@ -74,28 +61,22 @@ public class BuildingResource {
      */
     @POST
     @Path("/{id}/areas")
-    @Transactional
-    public Response addAreaToBuilding(@PathParam("id") Integer buildingId, @Valid AreaRepresentation areaDto) { // <-- Προσθήκη @Valid
-        // We find the building
-        Building building = buildingRepository.findById(buildingId);
+    public Response addAreaToBuilding(@PathParam("id") Integer buildingId, @Valid AreaRepresentation areaDto) {
+        try {
+            // DTO -> Entity
+            Area area = areaMapper.toModel(areaDto);
 
-        if (building == null) {
+            // Call Service
+            facilityService.addAreaToBuilding(buildingId, area);
+
+            // Return Response
+            return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + area.getAreaId()))
+                    .entity(areaMapper.toRepresentation(area))
+                    .build();
+
+        } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        // Convert DTO to Entity
-        Area area = areaMapper.toModel(areaDto);
-
-        // connect the objects
-        building.addArea(area);
-
-        // store
-        areaRepository.persist(area);
-
-        // return the answer (Entity -> DTO)
-        return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + area.getAreaId()))
-                .entity(areaMapper.toRepresentation(area))
-                .build();
     }
 
     /**
@@ -105,7 +86,8 @@ public class BuildingResource {
     @GET
     @Path("/{id}/areas")
     public Response getAreasOfBuilding(@PathParam("id") Integer buildingId) {
-        Building building = buildingRepository.findById(buildingId);
+        Building building = facilityService.findBuildingById(buildingId);
+
         if (building == null) return Response.status(404).build();
 
         var dtos = building.getAreas().stream()
@@ -115,68 +97,111 @@ public class BuildingResource {
         return Response.ok(dtos).build();
     }
 
-
     /**
      * POST /buildings/{bid}/areas/{aid}/checkpoints
      * Add a Checkpoint to a Zone of a Building.
      */
     @POST
     @Path("/{buildingId}/areas/{areaId}/checkpoints")
-    @Transactional
     public Response addCheckpointToArea(@PathParam("buildingId") Integer buildingId,
                                         @PathParam("areaId") Integer areaId,
                                         @Valid CheckpointRepresentation checkpointDto) {
+        try {
+            // DTO -> Entity
+            Checkpoint checkpoint = checkpointMapper.toModel(checkpointDto);
 
-        // Check if the building exists
-        Building building = buildingRepository.findById(buildingId);
-        if (building == null) return Response.status(Response.Status.NOT_FOUND).build();
+            // Call Service
+            facilityService.addCheckpointToArea(buildingId, areaId, checkpoint);
 
-        // Check if the area exists
-        Area area = areaRepository.findById(areaId);
-        if (area == null) return Response.status(Response.Status.NOT_FOUND).build();
+            // Return Response
+            return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + areaId + "/checkpoints/" + checkpoint.getCheckpointId()))
+                    .entity(checkpointMapper.toRepresentation(checkpoint))
+                    .build();
 
-        // Check that the zone actually belongs to this building
-        if (area.getBuilding().getBuildingId() != buildingId) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Area does not belong to this building").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (SecurityException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-
-        // Creating Checkpoints from DTO
-        Checkpoint checkpoint = checkpointMapper.toModel(checkpointDto);
-
-        // Connection to the area
-        area.addCheckpoint(checkpoint);
-
-        checkpointRepository.persist(checkpoint);
-
-        return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + areaId + "/checkpoints/" + checkpoint.getCheckpointId()))
-                .entity(checkpointMapper.toRepresentation(checkpoint))
-                .build();
     }
 
     /**
      * GET /buildings/{bid}/areas/{aid}/checkpoints
-     * Download the Checkpoints of a Zone.
      */
     @GET
     @Path("/{buildingId}/areas/{areaId}/checkpoints")
     public Response getCheckpointsOfArea(@PathParam("buildingId") Integer buildingId,
                                          @PathParam("areaId") Integer areaId) {
 
-        if (buildingRepository.findById(buildingId) == null) return Response.status(404).build();
-        Area area = areaRepository.findById(areaId);
-        if (area == null) return Response.status(404).build();
+        Building building = facilityService.findBuildingById(buildingId);
+        Area area = facilityService.findAreaById(areaId);
+
+        if (building == null || area == null) return Response.status(404).build();
 
         if (area.getBuilding().getBuildingId() != buildingId) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Mismatch between Building and Area").build();
         }
 
-        List<Checkpoint> checkpoints = checkpointRepository.fetchByArea(areaId);
+        // Fetch via Service or Repository wrapper
+        List<Checkpoint> checkpoints = facilityService.getCheckpointsOfArea(areaId);
 
-        // Convert to DTO list
-        List<CheckpointRepresentation> dtos = checkpointMapper.toRepresentationList(checkpoints);
+        return Response.ok(checkpointMapper.toRepresentationList(checkpoints)).build();
+    }
 
-        return Response.ok(dtos).build();
+    /**
+     * It connects two regions as "Neighbors".
+     * URL: PUT /buildings/areas/{id1}/neighbors/{id2}
+     * Example: PUT /buildings/areas/5/neighbors/6 -> Connects Area 5 with Area 6.
+     */
+    @PUT
+    @Path("/areas/{areaId}/neighbors/{neighborId}")
+    public Response connectNeighbors(@PathParam("areaId") Integer areaId,
+                                     @PathParam("neighborId") Integer neighborId) {
+        try {
+            facilityService.connectNeighbors(areaId, neighborId);
+
+            return Response.ok("{\"status\": \"Connected\"}").build();
+
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+        }
+    }
+
+    /**
+     * He deletes a building.
+     * Due to Cascade, the following will be automatically deleted:
+     * 1. All Areas of the building.
+     * 2. All the Checkpoints of these areas.
+     */
+    @DELETE
+    @Path("/{id}")
+    public Response deleteBuilding(@PathParam("id") Integer id) {
+        boolean deleted = facilityService.deleteBuilding(id);
+
+        if (deleted) {
+            // 204 No Content
+            return Response.noContent().build();
+        } else {
+            // 404 Not Found
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    /**
+     * It disconnects two regions (they are no longer neighbors).
+     * URL: DELETE /buildings/areas/{id1}/neighbors/{id2}
+     */
+    @DELETE
+    @Path("/areas/{areaId}/neighbors/{neighborId}")
+    public Response disconnectNeighbors(@PathParam("areaId") Integer areaId,
+                                        @PathParam("neighborId") Integer neighborId) {
+        try {
+            facilityService.disconnectNeighbors(areaId, neighborId);
+            return Response.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

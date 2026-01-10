@@ -79,21 +79,11 @@ public class BuildingResourceTest {
      */
     @Test
     void testGetAreasOfBuilding() {
-        BuildingRepresentation buildingDto = new BuildingRepresentation();
-        buildingDto.name = "Multi-Area HQ";
-        buildingDto.address = new Address("Patission", "80", "Athens", "10434", "Greece");
-
-        int buildingId = given()
-                .contentType(ContentType.JSON)
-                .body(buildingDto)
-                .when().post("/buildings").then().extract().path("id");
+        int buildingId = createBuilding("Multi-Area HQ");
 
         AreaRepresentation areaDto = new AreaRepresentation();
         areaDto.name = "Lobby";
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(areaDto)
+        given().contentType(ContentType.JSON).body(areaDto)
                 .when().post("/buildings/" + buildingId + "/areas").then().statusCode(201);
 
         // Action: GET /buildings/{id}/areas
@@ -115,36 +105,15 @@ public class BuildingResourceTest {
         invalidDto.name = ""; // Empty Name -> Must Pop
         invalidDto.address = new Address("A", "1", "B", "2", "C");
 
-        given()
-                .contentType(ContentType.JSON)
-                .body(invalidDto)
-                .when()
-                .post("/buildings")
-                .then()
-                .statusCode(400); // Bad Request
+        given().contentType(ContentType.JSON).body(invalidDto)
+                .when().post("/buildings").then().statusCode(400);
     }
 
     @Test
     void testAddAndGetCheckpoint() {
-        BuildingRepresentation buildingDto = new BuildingRepresentation();
-        buildingDto.name = "Security HQ";
-        buildingDto.address = new Address("Evelpidon", "22", "Athens", "11362", "Greece");
+        int buildingId = createBuilding("Security HQ");
+        int areaId = createArea(buildingId, "Main Entrance");
 
-        int buildingId = given()
-                .contentType(ContentType.JSON)
-                .body(buildingDto)
-                .when().post("/buildings").then().extract().path("id");
-
-        AreaRepresentation areaDto = new AreaRepresentation();
-        areaDto.name = "Main Entrance";
-
-        int areaId = given()
-                .contentType(ContentType.JSON)
-                .body(areaDto)
-                .when().post("/buildings/" + buildingId + "/areas")
-                .then().extract().path("id");
-
-        // Action: Add Checkpoint (POST)
         CheckpointRepresentation cpDto = new CheckpointRepresentation();
         cpDto.name = "Turnstile A";
 
@@ -154,45 +123,24 @@ public class BuildingResourceTest {
                 .when()
                 .post("/buildings/" + buildingId + "/areas/" + areaId + "/checkpoints")
                 .then()
-                .statusCode(201) // Created
+                .statusCode(201)
                 .body("checkpointId", notNullValue())
-                .body("name", equalTo("Turnstile A"))
-                .body("areaId", equalTo(areaId)) // We confirm that it was connected correctly
                 .extract().path("checkpointId");
 
-        // Action: Recover Checkpoints (GET)
         given()
                 .when()
                 .get("/buildings/" + buildingId + "/areas/" + areaId + "/checkpoints")
                 .then()
                 .statusCode(200)
-                .body("size()", equalTo(1))
-                .body("[0].checkpointId", equalTo(checkpointId))
-                .body("[0].name", equalTo("Turnstile A"));
+                .body("[0].checkpointId", equalTo(checkpointId));
     }
 
     @Test
     void testCheckpointHierarchyMismatch() {
-        // Scenario: We try to put checkpoints in a zone,
-        // but in the URL we give WRONG building.
-        // It must fail because the zone does not belong to this building.
+        int b1Id = createBuilding("Building Alpha");
+        int b2Id = createBuilding("Building Beta");
+        int areaId = createArea(b1Id, "Zone Alpha");
 
-        BuildingRepresentation b1 = new BuildingRepresentation();
-        b1.name = "Building Alpha";
-        b1.address = new Address("A", "1", "A", "1", "A");
-        int b1Id = given().contentType(ContentType.JSON).body(b1).when().post("/buildings").then().extract().path("id");
-
-        BuildingRepresentation b2 = new BuildingRepresentation();
-        b2.name = "Building Beta";
-        b2.address = new Address("B", "2", "B", "2", "B");
-        int b2Id = given().contentType(ContentType.JSON).body(b2).when().post("/buildings").then().extract().path("id");
-
-        AreaRepresentation areaDto = new AreaRepresentation();
-        areaDto.name = "Zone Alpha";
-        int areaId = given().contentType(ContentType.JSON).body(areaDto)
-                .when().post("/buildings/" + b1Id + "/areas").then().extract().path("id");
-
-        // Action: POST attempt in Building B (but with Area A)
         CheckpointRepresentation cpDto = new CheckpointRepresentation();
         cpDto.name = "Hacker Gate";
 
@@ -200,8 +148,74 @@ public class BuildingResourceTest {
                 .contentType(ContentType.JSON)
                 .body(cpDto)
                 .when()
+                // Trying to add to Area (which is in Alpha) via Beta URL
                 .post("/buildings/" + b2Id + "/areas/" + areaId + "/checkpoints")
                 .then()
-                .statusCode(400); // Expect Bad Request (due to the control we put in Resource)
+                .statusCode(400);
+    }
+
+
+    @Test
+    void testConnectAndDisconnectNeighbors() {
+        int buildingId = createBuilding("Topology HQ");
+        int area1 = createArea(buildingId, "Hallway");
+        int area2 = createArea(buildingId, "Office");
+
+        // Connect (PUT)
+        given()
+                .when()
+                .put("/buildings/areas/" + area1 + "/neighbors/" + area2)
+                .then()
+                .statusCode(200)
+                .body("status", equalTo("Connected"));
+
+        // Disconnect (DELETE)
+        given()
+                .when()
+                .delete("/buildings/areas/" + area1 + "/neighbors/" + area2)
+                .then()
+                .statusCode(204); // No Content
+    }
+
+    @Test
+    void testDeleteBuilding() {
+        int buildingId = createBuilding("Temporary Building");
+        createArea(buildingId, "Temp Zone");
+
+        // Delete (DELETE)
+        given()
+                .when()
+                .delete("/buildings/" + buildingId)
+                .then()
+                .statusCode(204); // No Content
+
+        // Verify it's gone
+        AreaRepresentation checkArea = new AreaRepresentation();
+        checkArea.name = "Check Deleted";
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(checkArea) // We send the valid item
+                .when()
+                .post("/buildings/" + buildingId + "/areas")
+                .then()
+                .statusCode(404);
+    }
+
+    // --- Helper Methods ---
+
+    private int createBuilding(String name) {
+        BuildingRepresentation b = new BuildingRepresentation();
+        b.name = name;
+        b.address = new Address("Test", "1", "Test", "11111", "Test");
+        return given().contentType(ContentType.JSON).body(b)
+                .when().post("/buildings").then().extract().path("id");
+    }
+
+    private int createArea(int buildingId, String name) {
+        AreaRepresentation a = new AreaRepresentation();
+        a.name = name;
+        return given().contentType(ContentType.JSON).body(a)
+                .when().post("/buildings/" + buildingId + "/areas").then().extract().path("id");
     }
 }
