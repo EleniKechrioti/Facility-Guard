@@ -220,6 +220,6 @@ public class AccessCardResource {
 
     public static class GrantAccessRequest {
         public int areaId;
-        public PermissionType type; // Προαιρετικό, default AccessGranted
+        public PermissionType type; // default AccessGranted
     }
 }
