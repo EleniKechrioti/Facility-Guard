@@ -279,4 +279,88 @@ public class RepositoriesTests extends JPATest{
         Assertions.assertTrue(requestRepo.hasActiveRequest(u.getUserId()));
     }
 
+    // --- CHECKPOINT REPOSITORY TESTS ---
+    @Test
+    @Transactional
+    void testCheckpointFetchByArea() {
+        // Setup: Building -> Area -> Checkpoints
+        Building b = new Building("CP_Building", null);
+        buildingRepo.persist(b);
+
+        Area area1 = new Area("Area 1", b);
+        areaRepo.persist(area1);
+
+        Area area2 = new Area("Area 2", b);
+        areaRepo.persist(area2);
+
+        Checkpoint cp1 = new Checkpoint("CP-1");
+        cp1.setArea(area1);
+        checkpointRepo.persist(cp1);
+
+        Checkpoint cp2 = new Checkpoint("CP-2");
+        cp2.setArea(area1);
+        checkpointRepo.persist(cp2);
+
+        Checkpoint cp3 = new Checkpoint("CP-3");
+        cp3.setArea(area2);
+        checkpointRepo.persist(cp3);
+
+        // Act: fetch checkpoints only for area1
+        List<Checkpoint> result = checkpointRepo.fetchByArea(area1.getAreaId());
+
+        // Assert
+        Assertions.assertEquals(2, result.size(), "Πρέπει να επιστρέψει 2 checkpoints για το Area 1");
+
+        boolean foundCP1 = result.stream().anyMatch(c -> c.getName().equals("CP-1"));
+        boolean foundCP2 = result.stream().anyMatch(c -> c.getName().equals("CP-2"));
+        boolean foundCP3 = result.stream().anyMatch(c -> c.getName().equals("CP-3"));
+
+        Assertions.assertTrue(foundCP1);
+        Assertions.assertTrue(foundCP2);
+        Assertions.assertFalse(foundCP3, "Δεν πρέπει να περιέχει checkpoints άλλου area");
+    }
+
+    // --- ACCESS LOG REPOSITORY TESTS ---
+    @Test
+    @Transactional
+    void testAccessLogPersistAndRetrieve() {
+        // Setup hierarchy
+        Building b = new Building("LogB", null);
+        buildingRepo.persist(b);
+
+        Area area = new Area("LogArea", b);
+        areaRepo.persist(area);
+
+        Checkpoint cp = new Checkpoint("LogCP");
+        cp.setArea(area);
+        checkpointRepo.persist(cp);
+
+        AccessCard card = new AccessCard(new Date());
+        cardRepo.persist(card);
+
+        // Create AccessLog
+        AccessLog log = new AccessLog(
+                PermissionType.AccessGranted,
+                AccessType.In,
+                card,
+                cp
+        );
+        logRepo.persist(log);
+
+        // Act: retrieve all logs
+        List<AccessLog> logs = logRepo.listAll();
+
+        // Assert
+        Assertions.assertEquals(1, logs.size(), "Πρέπει να υπάρχει ακριβώς ένα AccessLog");
+
+        AccessLog stored = logs.get(0);
+        Assertions.assertEquals(PermissionType.AccessGranted, stored.getAccessGranted());
+        Assertions.assertEquals(AccessType.In, stored.getAccessType());
+        Assertions.assertNotNull(stored.getAccessCard());
+        Assertions.assertNotNull(stored.getCheckpoint());
+    }
+
+
+
+
 }

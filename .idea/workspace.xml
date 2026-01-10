@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="Added Checkpoint mapper and representation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/RepositoriesTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/test/java/org/aueb/persistence/RepositoriesTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +35,9 @@
     &quot;accountId&quot;: &quot;6b6cab55-2dcb-45ed-b976-4e13c97da421&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -55,6 +57,7 @@
     "JUnit.PermissionJPATest1.executor": "Run",
     "JUnit.RegistrationRequestJPATest1.executor": "Run",
     "JUnit.RepositoriesTests.executor": "Run",
+    "JUnit.RepositoriesTests.testCheckpointFetchByArea.executor": "Run",
     "JUnit.UserJPATest.executor": "Run",
     "JUnit.aueb in FacilityGuard.executor": "Coverage",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -64,7 +67,7 @@
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.aueb in FacilityGuard">
+  <component name="RunManager" selected="JUnit.RepositoriesTests">
     <configuration name="AlertRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
@@ -110,7 +113,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserJPATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="RepositoriesTests.testCheckpointFetchByArea" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
         <pattern>
@@ -119,8 +122,9 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="org.aueb.persistence" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.UserJPATest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.persistence.RepositoriesTests" />
+      <option name="METHOD_NAME" value="testCheckpointFetchByArea" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -135,11 +139,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.aueb in FacilityGuard" />
         <item itemvalue="JUnit.RepositoriesTests" />
+        <item itemvalue="JUnit.RepositoriesTests.testCheckpointFetchByArea" />
+        <item itemvalue="JUnit.aueb in FacilityGuard" />
         <item itemvalue="JUnit.AlertResourceTest" />
         <item itemvalue="JUnit.AlertRepresentationTest" />
-        <item itemvalue="JUnit.UserJPATest" />
       </list>
     </recent_temporary>
   </component>
@@ -151,7 +155,20 @@
       <option name="presentableId" value="Default" />
       <updated>1767805882604</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added Checkpoint mapper and representation">
+      <option name="closed" value="true" />
+      <created>1768049699461</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1768049699461</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Checkpoint mapper and representation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Checkpoint mapper and representation" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/team01_ft_2025_26$All_in_FacilityGuard.ic" NAME="All in FacilityGuard Coverage Results" MODIFIED="1767711038225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
