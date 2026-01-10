@@ -10,6 +10,6 @@ public class UserRepresentation {
     public String email;
     public UserType userType;
 
-    // ΣΗΜΑΝΤΙΚΟ: Δεν βάζουμε password εδώ για λόγους ασφαλείας.
+    // Δεν βάζουμε password εδώ για λόγους ασφαλείας.
     // Δεν βάζουμε AccessCard ή Requests για να αποφύγουμε infinite loops.
 }

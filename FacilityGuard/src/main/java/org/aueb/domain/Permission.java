@@ -78,7 +78,6 @@ public class Permission {
 
     public PermissionType getAccessGranted() { return accessGranted; }
 
-
     public AccessCard getAccessCard() { return accessCard; }
 
     public void setAccessCard(AccessCard accessCard) {

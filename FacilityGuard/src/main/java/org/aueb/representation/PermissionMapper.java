@@ -19,5 +19,6 @@ public interface PermissionMapper {
     // Αγνοούμε την accessCard (την ορίζουμε από το URL /cards/{id}/...)
     // Το MapStruct θα προσπαθήσει να κάνει map το AreaRepresentation σε Area χρησιμοποιώντας τον AreaMapper.
     @Mapping(target = "accessCard", ignore = true)
+    @Mapping(target = "accessGranted", ignore = true)
     Permission toModel(PermissionRepresentation representation);
 }
