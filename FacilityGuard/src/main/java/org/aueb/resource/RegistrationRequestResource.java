@@ -49,24 +49,18 @@ public class RegistrationRequestResource {
                     .entity("User not found").build();
         }
 
-        try {
-            // 2. Χρησιμοποιούμε τη Business Logic του Domain
-            // Αυτό ελέγχει αυτόματα αν υπάρχει ήδη ενεργή αίτηση
-            RegistrationRequest newRequest = user.submitRegistrationRequest();
+        // 2. Χρησιμοποιούμε τη Business Logic του Domain
+        // Αυτό ελέγχει αυτόματα αν υπάρχει ήδη ενεργή αίτηση
+        RegistrationRequest newRequest = user.submitRegistrationRequest();
 
-            // 3. Αποθήκευση
-            requestRepository.persist(newRequest);
+        // 3. Αποθήκευση
+        requestRepository.persist(newRequest);
 
-            // 4. Επιστροφή απάντησης (μετατροπή σε Representation)
-            return Response.created(URI.create("/requests/" + newRequest.getRegistrationId()))
-                    .entity(requestMapper.toRepresentation(newRequest))
-                    .build();
+        // 4. Επιστροφή απάντησης (μετατροπή σε Representation)
+        return Response.created(URI.create("/requests/" + newRequest.getRegistrationId()))
+                .entity(requestMapper.toRepresentation(newRequest))
+                .build();
 
-        } catch (IllegalStateException e) {
-            // Αν ο χρήστης έχει ήδη αίτηση, επιστρέφουμε 409 Conflict
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(e.getMessage()).build();
-        }
     }
 
     /**
@@ -118,17 +112,11 @@ public class RegistrationRequestResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Admin user not found").build();
         }
 
-        try {
-            // 3. Καλούμε τη Business Logic
-            request.setApprovedStatus(approve, adminUser);
+        // 3. Καλούμε τη Business Logic
+        request.setApprovedStatus(approve, adminUser);
 
-            // Το Transactional θα κάνει commit αυτόματα τις αλλαγές
-            return Response.ok(requestMapper.toRepresentation(request)).build();
+        // Το Transactional θα κάνει commit αυτόματα τις αλλαγές
+        return Response.ok(requestMapper.toRepresentation(request)).build();
 
-        } catch (SecurityException e) {
-            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
-        } catch (IllegalStateException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
     }
 }

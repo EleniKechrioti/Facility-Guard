@@ -151,7 +151,7 @@ public class BuildingResourceTest {
                 // Trying to add to Area (which is in Alpha) via Beta URL
                 .post("/buildings/" + b2Id + "/areas/" + areaId + "/checkpoints")
                 .then()
-                .statusCode(400);
+                .statusCode(403);
     }
 
 

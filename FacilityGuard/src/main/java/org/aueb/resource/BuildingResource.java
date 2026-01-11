@@ -22,9 +22,12 @@ public class BuildingResource {
     @Inject
     FacilityService facilityService;
 
-    @Inject BuildingMapper buildingMapper;
-    @Inject AreaMapper areaMapper;
-    @Inject CheckpointMapper checkpointMapper;
+    @Inject
+    BuildingMapper buildingMapper;
+    @Inject
+    AreaMapper areaMapper;
+    @Inject
+    CheckpointMapper checkpointMapper;
 
     /**
      * GET /buildings
@@ -62,21 +65,18 @@ public class BuildingResource {
     @POST
     @Path("/{id}/areas")
     public Response addAreaToBuilding(@PathParam("id") Integer buildingId, @Valid AreaRepresentation areaDto) {
-        try {
-            // DTO -> Entity
-            Area area = areaMapper.toModel(areaDto);
 
-            // Call Service
-            facilityService.addAreaToBuilding(buildingId, area);
+        // DTO -> Entity
+        Area area = areaMapper.toModel(areaDto);
 
-            // Return Response
-            return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + area.getAreaId()))
-                    .entity(areaMapper.toRepresentation(area))
-                    .build();
+        // Call Service
+        facilityService.addAreaToBuilding(buildingId, area);
 
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        // Return Response
+        return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + area.getAreaId()))
+                .entity(areaMapper.toRepresentation(area))
+                .build();
+
     }
 
     /**
@@ -106,23 +106,17 @@ public class BuildingResource {
     public Response addCheckpointToArea(@PathParam("buildingId") Integer buildingId,
                                         @PathParam("areaId") Integer areaId,
                                         @Valid CheckpointRepresentation checkpointDto) {
-        try {
-            // DTO -> Entity
-            Checkpoint checkpoint = checkpointMapper.toModel(checkpointDto);
 
-            // Call Service
-            facilityService.addCheckpointToArea(buildingId, areaId, checkpoint);
+        // DTO -> Entity
+        Checkpoint checkpoint = checkpointMapper.toModel(checkpointDto);
 
-            // Return Response
-            return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + areaId + "/checkpoints/" + checkpoint.getCheckpointId()))
-                    .entity(checkpointMapper.toRepresentation(checkpoint))
-                    .build();
+        // Call Service
+        facilityService.addCheckpointToArea(buildingId, areaId, checkpoint);
 
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-        } catch (SecurityException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
+        // Return Response
+        return Response.created(URI.create("/buildings/" + buildingId + "/areas/" + areaId + "/checkpoints/" + checkpoint.getCheckpointId()))
+                .entity(checkpointMapper.toRepresentation(checkpoint))
+                .build();
     }
 
     /**
@@ -158,15 +152,11 @@ public class BuildingResource {
     @Path("/areas/{areaId}/neighbors/{neighborId}")
     public Response connectNeighbors(@PathParam("areaId") Integer areaId,
                                      @PathParam("neighborId") Integer neighborId) {
-        try {
-            facilityService.connectNeighbors(areaId, neighborId);
 
-            return Response.ok("{\"status\": \"Connected\"}").build();
+        facilityService.connectNeighbors(areaId, neighborId);
 
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}").build();
-        }
+        return Response.ok("{\"status\": \"Connected\"}").build();
+
     }
 
     /**
@@ -179,14 +169,8 @@ public class BuildingResource {
     @Path("/{id}")
     public Response deleteBuilding(@PathParam("id") Integer id) {
         boolean deleted = facilityService.deleteBuilding(id);
-
-        if (deleted) {
-            // 204 No Content
-            return Response.noContent().build();
-        } else {
-            // 404 Not Found
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        if (!deleted) throw new IllegalArgumentException("Building not found");
+        return Response.noContent().build();
     }
 
     /**
@@ -197,11 +181,8 @@ public class BuildingResource {
     @Path("/areas/{areaId}/neighbors/{neighborId}")
     public Response disconnectNeighbors(@PathParam("areaId") Integer areaId,
                                         @PathParam("neighborId") Integer neighborId) {
-        try {
-            facilityService.disconnectNeighbors(areaId, neighborId);
-            return Response.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+
+        facilityService.disconnectNeighbors(areaId, neighborId);
+        return Response.noContent().build();
     }
 }

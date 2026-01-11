@@ -98,23 +98,17 @@ public class AccessCardResource {
                     .entity("User not found").build();
         }
 
-        try {
-            // 2. Domain Logic
-            AccessCard newCard = user.issueAccessCard(request.expirationDate);
+        // 2. Domain Logic
+        AccessCard newCard = user.issueAccessCard(request.expirationDate);
 
-            // 3. Persist
-            cardRepository.persist(newCard);
+        // 3. Persist
+        cardRepository.persist(newCard);
 
-            // 4. Επιστροφή
-            return Response.created(URI.create("/cards/" + newCard.getCardId()))
-                    .entity(cardMapper.toRepresentation(newCard))
-                    .build();
+        // 4. Επιστροφή
+        return Response.created(URI.create("/cards/" + newCard.getCardId()))
+                .entity(cardMapper.toRepresentation(newCard))
+                .build();
 
-        } catch (IllegalStateException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(e.getMessage())
-                    .build();
-        }
     }
 
     /**
@@ -130,13 +124,9 @@ public class AccessCardResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        try {
-            card.deactivateCard(); // Domain Logic
-            return Response.ok(cardMapper.toRepresentation(card)).build();
-        } catch (IllegalStateException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(e.getMessage()).build();
-        }
+        card.deactivateCard(); // Domain Logic
+        return Response.ok(cardMapper.toRepresentation(card)).build();
+
     }
 
     // SUB-RESOURCE: PERMISSIONS
