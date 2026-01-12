@@ -82,12 +82,20 @@ public class User {
     }
 
     // ------------------- Business Methods -------------------
-
     /**
      * Creates and submits a new registration request
-     * @throws IllegalStateException if the user already has an active request (status=ACTIVE).
+     * @throws IllegalStateException if the user already has an active request OR an active access card.
      */
     public RegistrationRequest submitRegistrationRequest() {
+
+        // Αν υπάρχει κάρτα, αλλά ΔΕΝ είναι έγκυρη (π.χ. έληξε),
+        // τότε καθαρίζουμε τυχόν ενεργά requests για να επιτρέψουμε νέα αίτηση.
+        if (this.accessCard != null && !this.accessCard.isValid()) {
+            this.invalidateActiveRegistrationRequest();
+        }
+        // -----------------------------------
+
+        // 1. Έλεγχος αν υπάρχει ήδη ΕΝΕΡΓΗ αίτηση
         boolean hasActiveRequest = this.registrationRequests.stream()
                 .anyMatch(r -> r.getStatus() == ActivityStatus.Active);
 
@@ -95,8 +103,12 @@ public class User {
             throw new IllegalStateException("User " + this.username + " already has an active registration request. Cannot submit a new one.");
         }
 
-        RegistrationRequest newRequest = new RegistrationRequest();
+        // 2. Ελέγχουμε αν υπάρχει κάρτα ΚΑΙ αν είναι έγκυρη.
+        if (this.accessCard != null && this.accessCard.isValid()) {
+            throw new IllegalStateException("User already has an active access card.");
+        }
 
+        RegistrationRequest newRequest = new RegistrationRequest();
         addRegistrationRequest(newRequest);
 
         return newRequest;
@@ -109,8 +121,9 @@ public class User {
      * @throws IllegalStateException if they don't fulfill the limitations.
      */
     public AccessCard issueAccessCard(Date expirationDate) {
-        if (this.accessCard != null) {
-            throw new IllegalStateException("User already has an access card.");
+        // Επιτρέπουμε έκδοση αν η παλιά κάρτα ΔΕΝ είναι valid.
+        if (this.accessCard != null && this.accessCard.isValid()) {
+            throw new IllegalStateException("User already has an active access card.");
         }
 
         RegistrationRequest activeApprovedRequest = this.registrationRequests.stream()
@@ -120,6 +133,7 @@ public class User {
 
         AccessCard newCard = new AccessCard(expirationDate);
 
+        // Η setAccessCard θα αντικαταστήσει την παλιά κάρτα με τη νέα
         setAccessCard(newCard);
         return newCard;
     }
@@ -189,6 +203,19 @@ public class User {
      */
     public boolean isVisitor() {
         return this.userType == UserType.Visitor;
+    }
+
+    /**
+     * Helper method: Sets any ACTIVE registration request to INACTIVE.
+     * Used when the card is deactivated or expired.
+     */
+    public void invalidateActiveRegistrationRequest() {
+        for (RegistrationRequest request : this.registrationRequests) {
+            // Βρίσκουμε αν υπάρχει Active (και Approved) αίτηση
+            if (request.getStatus() == ActivityStatus.Active) {
+                request.setStatus(ActivityStatus.Inactive);
+            }
+        }
     }
 
 

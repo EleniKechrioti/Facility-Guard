@@ -68,6 +68,11 @@ public class AccessCard {
         }
         this.status = ActivityStatus.Inactive;
 
+        // Μόλις η κάρτα γίνει Inactive, ακυρώνουμε και το σχετικό Active Request του χρήστη
+        if (this.user != null) {
+            this.user.invalidateActiveRegistrationRequest();
+        }
+
     }
 
     /**
