@@ -34,6 +34,9 @@ public class AccessCardResourceTest {
 
     @Inject
     BuildingRepository buildingRepository;
+    @Inject AccessLogRepository logRepository;
+    @Inject AlertRepository alertRepository;
+    @Inject CheckpointRepository checkpointRepository;
 
     // Helper μεταβλητές για τα tests
     private int testUserId;
@@ -42,8 +45,10 @@ public class AccessCardResourceTest {
     @BeforeEach
     @Transactional
     public void setup() {
-        // --- ΚΑΘΑΡΙΣΜΟΣ ΒΑΣΗΣ ΜΕ ΤΗ ΣΩΣΤΗ ΣΕΙΡΑ ---
+        alertRepository.deleteAll();
+        logRepository.deleteAll();
         permissionRepository.deleteAll();
+        checkpointRepository.deleteAll();
         // Διαγραφή RegistrationRequests μέσω JPQL
         userRepository.getEntityManager().createQuery("DELETE FROM RegistrationRequest").executeUpdate();
         userRepository.deleteAll();
