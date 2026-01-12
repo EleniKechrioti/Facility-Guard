@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import org.aueb.domain.*;
 import org.aueb.persistence.*;
 import org.aueb.util.Address;
+import org.aueb.util.enumerations.AccessType;
 import org.aueb.util.enumerations.ActivityStatus;
 import org.aueb.util.enumerations.PermissionType;
 import org.aueb.util.enumerations.UserType;
@@ -26,6 +27,8 @@ public class DataInitializer {
     @Inject CheckpointRepository checkpointRepo;
     @Inject AccessCardRepository cardRepo;
     @Inject PermissionRepository permissionRepo;
+    @Inject AccessLogRepository logRepo;
+    @Inject AlertRepository alertRepo;
     @Inject EntityManager em;
 
     @Transactional
@@ -106,6 +109,20 @@ public class DataInitializer {
         userRepo.persist(costas);
         createRequest(costas, "Visit for interview", false);
 
+        System.out.println(">>> 🕒 Generating Historical Logs...");
+
+        createLog(cAlice, cpParking, AccessType.In, true, 4, ChronoUnit.HOURS);
+        createLog(cAlice, cpLobbyFront, AccessType.In, true, 3, ChronoUnit.HOURS, 55);
+        createLog(cAlice, cpOfficeDoor, AccessType.In, true, 3, ChronoUnit.HOURS, 50);
+
+        AccessLog logJohnFail = createLog(cJohn, cpServerBio, AccessType.In, false, 2, ChronoUnit.HOURS);
+
+        createAlert(logJohnFail, "Security Violation: User attempted access to Explicitly DENIED Area (Server Room).");
+
+        AccessLog logMariaFail = createLog(cMaria, cpOfficeDoor, AccessType.In, false, 1, ChronoUnit.HOURS);
+
+        createAlert(logMariaFail, "Authorization Failure: No permission found for Area 'Offices'.");
+
         System.out.println("\n--- ✅ DATA GENERATION COMPLETE ---");
         System.out.println("Checkpoints IDs:");
         System.out.printf("  [%d] Parking Gate\n", cpParking.getCheckpointId());
@@ -160,5 +177,28 @@ public class DataInitializer {
     private void deny(AccessCard card, Area area) {
         Permission p = new Permission(PermissionType.AccessDenied, card, area);
         permissionRepo.persist(p);
+    }
+
+    private AccessLog createLog(AccessCard card, Checkpoint cp, AccessType type, boolean granted, long minusAmount, ChronoUnit unit) {
+        return createLog(card, cp, type, granted, minusAmount, unit, 0);
+    }
+
+    private AccessLog createLog(AccessCard card, Checkpoint cp, AccessType type, boolean granted, long minusAmount, ChronoUnit unit, long minusMinutes) {
+        PermissionType result = granted ? PermissionType.AccessGranted : PermissionType.AccessDenied;
+
+        AccessLog log = new AccessLog(result, type, card, cp);
+
+        // Φτιάχνουμε χρόνο στο παρελθόν
+        Instant pastTime = Instant.now().minus(minusAmount, unit).minus(minusMinutes, ChronoUnit.MINUTES);
+        log.setTimestamp(Date.from(pastTime));
+
+        logRepo.persist(log);
+        return log;
+    }
+
+    private void createAlert(AccessLog log, String reason) {
+        Alert alert = new Alert(new Date(), reason); // Current time for alert creation usually, or log time
+        alert.setAccessLog(log);
+        alertRepo.persist(alert);
     }
 }
