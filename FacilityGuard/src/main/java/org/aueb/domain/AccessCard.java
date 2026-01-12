@@ -20,7 +20,7 @@ public class AccessCard {
     private int cardId;
 
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "expiration_date", nullable = false)
     private Date expirationDate;
 

@@ -3,7 +3,7 @@ package org.aueb.resource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
+import jakarta.transaction.UserTransaction;
 import org.aueb.domain.*;
 import org.aueb.persistence.*;
 import org.aueb.representation.AccessRequestRepresentation;
@@ -33,40 +33,59 @@ public class AccessResourceTest {
     @Inject AccessLogRepository logRepo;
     @Inject AlertRepository alertRepo;
 
+    @Inject UserTransaction userTransaction;
+
     private Integer cardId;
     private Integer checkpointId;
 
     @BeforeEach
-    @Transactional
-    void setup() {
-        // 1. Create Infrastructure
-        Building b = new Building("Secure HQ", new Address("TestAddress", "1", "Test", "11678", "Greece"));
-        buildingRepo.persist(b);
-        Area a = new Area("Vault", b);
-        areaRepo.persist(a);
+    void setup() throws Exception {
+        userTransaction.begin();
+        try {
+            doCleanup();
 
-        Checkpoint cp = new Checkpoint("Vault Door");
-        cp.setArea(a);
-        checkpointRepo.persist(cp);
-        this.checkpointId = cp.getCheckpointId();
+            Building b = new Building("HQ", new Address("St", "1", "City", "zip", "Gr"));
+            buildingRepo.persist(b);
+            Area a = new Area("Vault", b);
+            areaRepo.persist(a);
 
-        // 2. Create User & Card
-        User u = new User("James", "Bond", "James", "Bond", "007@mi6.uk", UserType.Employee);
-        userRepo.persist(u);
+            Checkpoint cp = new Checkpoint("Vault Door");
+            cp.setArea(a);
+            checkpointRepo.persist(cp);
+            this.checkpointId = cp.getCheckpointId();
 
-        AccessCard card = new AccessCard(Date.from(Instant.now().plusSeconds(3600)));
-        card.setUser(u);
-        cardRepo.persist(card);
-        this.cardId = card.getCardId();
+            User u = new User("James", "Bond", "J", "B", "email", UserType.Employee);
+            userRepo.persist(u); // Αποθηκεύουμε τον χρήστη
 
-        // 3. Grant Permission
-        Permission p = new Permission(PermissionType.AccessGranted, card, a);
-        permissionRepo.persist(p);
+            AccessCard card = new AccessCard(Date.from(Instant.now().plusSeconds(3600)));
+            card.setUser(u);
+            cardRepo.persist(card);
+            this.cardId = card.getCardId();
+
+            Permission p = new Permission(PermissionType.AccessGranted, card, a);
+            permissionRepo.persist(p);
+
+            userTransaction.commit();
+
+        } catch (Exception e) {
+            userTransaction.rollback();
+            throw e;
+        }
     }
 
     @AfterEach
-    @Transactional
-    void tearDown() {
+    void tearDown() throws Exception {
+        userTransaction.begin();
+        try {
+            doCleanup();
+            userTransaction.commit();
+        } catch (Exception e) {
+            userTransaction.rollback();
+        }
+    }
+
+    private void doCleanup() {
+        // 1. Alerts & Logs (εξαρτώνται από Checkpoints/Cards)
         alertRepo.deleteAll();
         logRepo.deleteAll();
         permissionRepo.deleteAll();
@@ -96,17 +115,7 @@ public class AccessResourceTest {
     }
 
     @Test
-    void testRequestAccess_Denied_NoPermission() {
-        // Revoke permission by deleting it
-        // Note: In integration tests, modifying DB directly inside test method
-        // usually requires its own transaction logic or helper service.
-        // For simplicity, we assume the setup gave permission.
-
-        // Let's create a NEW area with NO permission
-        // We need to use a helper or modify the setup logic,
-        // but to keep it simple, let's just use an invalid checkpoint ID (simulates bad request or not found)
-        // Or better: Create a scenario where it fails.
-
+    void testRequestAccess_Denied_BadCheckpoint() {
         AccessRequestRepresentation request = new AccessRequestRepresentation();
         request.cardId = cardId;
         request.checkpointId = 9999; // Non-existent checkpoint
@@ -125,7 +134,7 @@ public class AccessResourceTest {
 
     @Test
     void testGetLocation() {
-        // 1. Enter first
+        // Enter
         AccessRequestRepresentation request = new AccessRequestRepresentation();
         request.cardId = cardId;
         request.checkpointId = checkpointId;
@@ -133,7 +142,7 @@ public class AccessResourceTest {
 
         given().contentType(ContentType.JSON).body(request).post("/access/request").then().statusCode(200);
 
-        // 2. Check Location
+        // Check Location
         given()
                 .when()
                 .get("/access/location/" + cardId)
