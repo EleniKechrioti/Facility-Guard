@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="Added Checkpoint,Accesslog Repository tests">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="35d7c89c-501e-4ac8-a029-19d51edff256" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/FacilityGuard/src/main/java/org/aueb/representation/AccessLogMapper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,48 +22,29 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;DimitrisBls&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Marsott"
   }
-}</component>
+}]]></component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/softeng-aueb/team01-ft-2025-26",
     "accountId": "e3825885-dcd6-420e-910c-a5ab1ae2445d"
   }
 }]]></component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
-}</component>
-  <component name="ProjectId" id="37wEl0f1PT7DmKZkWvL4KQXlKdc" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="389cilheFcU4rF4gSa27rPWAdnK" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JUnit.AccessCardJPATest1.executor": "Run",
-    "JUnit.AccessControlServiceTest.executor": "Run",
-    "JUnit.AccessLogMapperTest.executor": "Run",
-    "JUnit.AccessLogRepresentationTest.executor": "Run",
-    "JUnit.AlertRepresentationTest.executor": "Run",
-    "JUnit.AlertResourceTest.executor": "Run",
-    "JUnit.AreaJPATest.executor": "Run",
-    "JUnit.BuildingJPATest.executor": "Run",
-    "JUnit.BuildingResourceTest.executor": "Run",
-    "JUnit.CheckpointMapperTest.executor": "Run",
-    "JUnit.CheckpointRepresentationTest.executor": "Run",
-    "JUnit.PermissionJPATest1.executor": "Run",
-    "JUnit.RegistrationRequestJPATest1.executor": "Run",
-    "JUnit.RepositoriesTests.executor": "Run",
-    "JUnit.RepositoriesTests.testCheckpointFetchByArea.executor": "Run",
-    "JUnit.UserJPATest.executor": "Run",
-    "JUnit.aueb in FacilityGuard.executor": "Coverage",
+    "JUnit.UserManagementServiceTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "dart.analysis.tool.window.visible": "false",
@@ -73,8 +52,8 @@
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.CheckpointMapperTest">
-    <configuration name="AccessControlServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager">
+    <configuration name="UserManagementServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="FacilityGuard" />
       <extension name="coverage">
         <pattern>
@@ -83,67 +62,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="org.aueb.service" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.service.AccessControlServiceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AccessLogMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.representation.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.representation" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.AccessLogMapperTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BuildingResourceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.resource.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.resource" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.resource.BuildingResourceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CheckpointMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.representation.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.representation" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.CheckpointMapperTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CheckpointRepresentationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="FacilityGuard" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.aueb.representation.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.aueb.representation" />
-      <option name="MAIN_CLASS_NAME" value="org.aueb.representation.CheckpointRepresentationTest" />
+      <option name="MAIN_CLASS_NAME" value="org.aueb.service.UserManagementServiceTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -151,11 +70,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CheckpointMapperTest" />
-        <item itemvalue="JUnit.AccessLogMapperTest" />
-        <item itemvalue="JUnit.AccessControlServiceTest" />
-        <item itemvalue="JUnit.BuildingResourceTest" />
-        <item itemvalue="JUnit.CheckpointRepresentationTest" />
+        <item itemvalue="JUnit.UserManagementServiceTest" />
       </list>
     </recent_temporary>
   </component>
@@ -168,38 +83,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f2baefae-4444-4c75-9508-a58f3f4feeb1" name="Changes" comment="" />
-      <created>1767805882604</created>
+      <changelist id="35d7c89c-501e-4ac8-a029-19d51edff256" name="Changes" comment="" />
+      <created>1768215357537</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1767805882604</updated>
+      <updated>1768215357537</updated>
     </task>
-    <task id="LOCAL-00001" summary="Added Checkpoint mapper and representation">
-      <option name="closed" value="true" />
-      <created>1768049699461</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1768049699461</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Added Checkpoint,Accesslog Repository tests">
-      <option name="closed" value="true" />
-      <created>1768051168468</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1768051168468</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Checkpoint mapper and representation" />
-    <MESSAGE value="Added Checkpoint,Accesslog Repository tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Checkpoint,Accesslog Repository tests" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/team01_ft_2025_26$All_in_FacilityGuard.ic" NAME="All in FacilityGuard Coverage Results" MODIFIED="1767711038225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/team01_ft_2025_26$aueb_in_FacilityGuard.ic" NAME="aueb in FacilityGuard Coverage Results" MODIFIED="1767980247103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
