@@ -9,16 +9,14 @@ import org.aueb.util.enumerations.PermissionType;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RequestScoped
 public class AccessLogRepository
         implements PanacheRepositoryBase<AccessLog, Integer> {
 
-    /**
-     * Deletes an AccessLog by id.
-     * NOTE: Deleting AccessLogs that are linked to Alerts
-     * may violate referential integrity.
-     */
+    /* ================= DELETE ================= */
+
     @Transactional
     public void delete(Integer id) {
         AccessLog log = findById(id);
@@ -27,98 +25,94 @@ public class AccessLogRepository
         }
     }
 
-    /**
-     * Fetch a single AccessLog with its AccessCard and Checkpoint eagerly loaded.
-     */
-    public AccessLog fetchWithCardAndCheckpoint(Integer logId) {
+    /* ================= FETCH SINGLE ================= */
 
+    public AccessLog fetchWithCardAndCheckpoint(Integer logId) {
         Query query = getEntityManager().createQuery(
-                " select l from AccessLog l " +
-                        " join fetch l.accessCard " +
-                        " join fetch l.checkpoint " +
-                        " where l.logId = :id"
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard " +
+                        "join fetch l.checkpoint " +
+                        "where l.logId = :id"
         );
         query.setParameter("id", logId);
-
         return (AccessLog) query.getSingleResult();
     }
 
-    /**
-     * Fetch all AccessLogs for a specific AccessCard.
-     */
-    public List<AccessLog> fetchByAccessCard(Integer cardId) {
+    /* ================= FETCH ALL ================= */
 
+    public List<AccessLog> fetchAll() {
         return find(
-                " select l from AccessLog l " +
-                        " join fetch l.accessCard c " +
-                        " join fetch l.checkpoint " +
-                        " where c.cardId = ?1",
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard " +
+                        "join fetch l.checkpoint"
+        ).list();
+    }
+
+    /* ================= BY CARD ================= */
+
+    public List<AccessLog> fetchByAccessCard(Integer cardId) {
+        return find(
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard c " +
+                        "join fetch l.checkpoint " +
+                        "where c.cardId = ?1",
                 cardId
         ).list();
     }
 
-    /**
-     * Fetch all AccessLogs for a specific Checkpoint.
-     */
-    public List<AccessLog> fetchByCheckpoint(Integer checkpointId) {
+    /* ================= BY CHECKPOINT ================= */
 
+    public List<AccessLog> fetchByCheckpoint(Integer checkpointId) {
         return find(
-                " select l from AccessLog l " +
-                        " join fetch l.accessCard " +
-                        " join fetch l.checkpoint cp " +
-                        " where cp.checkpointId = ?1",
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard " +
+                        "join fetch l.checkpoint cp " +
+                        "where cp.checkpointId = ?1",
                 checkpointId
         ).list();
     }
 
-    /**
-     * Fetch all denied access attempts.
-     */
-    public List<AccessLog> fetchDeniedAccesses() {
+    /* ================= DENIED ================= */
 
+    public List<AccessLog> fetchDeniedAccesses() {
         return find(
-                " select l from AccessLog l " +
-                        " join fetch l.accessCard " +
-                        " join fetch l.checkpoint " +
-                        " where l.accessGranted = ?1",
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard " +
+                        "join fetch l.checkpoint " +
+                        "where l.accessGranted = ?1",
                 PermissionType.AccessDenied
         ).list();
     }
 
-    /**
-     * Fetch AccessLogs between two timestamps.
-     */
-    public List<AccessLog> fetchBetweenDates(Date from, Date to) {
+    /* ================= BETWEEN DATES ================= */
 
+    public List<AccessLog> fetchBetween(Date from, Date to) {
         return find(
-                " select l from AccessLog l " +
-                        " join fetch l.accessCard " +
-                        " join fetch l.checkpoint " +
-                        " where l.timestamp between ?1 and ?2",
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard " +
+                        "join fetch l.checkpoint " +
+                        "where l.timestamp between ?1 and ?2",
                 from, to
         ).list();
     }
 
-    /**
-     * Fetch the most recent N AccessLogs ordered by timestamp.
-     */
-    public List<AccessLog> fetchLastN(int n) {
+    /* ================= LAST N ================= */
 
+    public List<AccessLog> fetchLastN(int n) {
         return find(
-                " select l from AccessLog l " +
-                        " join fetch l.accessCard " +
-                        " join fetch l.checkpoint " +
-                        " order by l.timestamp desc"
+                "select l from AccessLog l " +
+                        "join fetch l.accessCard " +
+                        "join fetch l.checkpoint " +
+                        "order by l.timestamp desc"
         ).page(0, n).list();
     }
 
-    /**
-     * Finds the last SUCCESSFUL access of a card.
-     * Necessary for Anti-Passback control.
-     */
-    public java.util.Optional<AccessLog> findLastSuccessfulLog(Integer cardId) {
-        return find("accessCard.cardId = ?1 and accessGranted = ?2 order by timestamp desc",
-                cardId, PermissionType.AccessGranted)
-                .firstResultOptional();
+    /* ================= ANTI-PASSBACK ================= */
+
+    public Optional<AccessLog> findLastSuccessfulLog(Integer cardId) {
+        return find(
+                "accessCard.cardId = ?1 and accessGranted = ?2 order by timestamp desc",
+                cardId, PermissionType.AccessGranted
+        ).firstResultOptional();
     }
 }
